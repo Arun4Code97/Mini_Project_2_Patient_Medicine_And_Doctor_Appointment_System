@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <title>View Patient Details  </title>
+
+    <meta name="viewport" content="width=device-width , initial-scale=1">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+    <style>
+        label{
+        width:160px;
+        }
+        p{
+        margin-left:160px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3 th:unless="${error}" class="text-center mt-3 mb-3 ">
+        Patient Details
+    </h3>
+
+    <div th:if="${error}">
+        <p class="text-danger mt-3 mb-3" th:text="${error}"> error message </p>
+    </div>
+
+    <form  th:unless="${error}" th:object="${patient}" >
+        <label >Id</label>
+        <input type="text" th:field="*{id}" aria-label="id"/>
+        <br> <br>
+
+        <label >First Name </label>
+        <input  type="text" th:field="*{firstName}" aria-label="firstName"/>
+        <br> <br>
+
+        <label>Last Name  </label>
+        <input  type="text" th:field="*{lastName}" aria-label="lastName"/>
+        <br> <br>
+
+        <label>Age </label>
+        <input  type="text" th:field="*{age}" aria-label="age"/>
+        <br> <br>
+
+        <label>Gender </label>
+        <input  type="text" th:field="*{gender}" aria-label="gender"/>
+        <br> <br>
+
+        <label>Email </label>
+        <input  type="text" th:field="*{email}" aria-label="email"/>
+        <br> <br>
+
+        <label>Phone </label>
+        <input  type="text" th:field="*{phone}" aria-label="phone"/>
+        <br> <br>
+
+        <label>Height </label>
+        <input  type="text" th:field="*{height}" aria-label="height"/>
+        <br> <br>
+
+        <label>Weight </label>
+        <input  type="text" th:field="*{weight}" aria-label="weight"/>
+        <br> <br>
+
+        <label>City </label>
+        <input  type="text" th:field="*{city}" aria-label="city"/>
+        <br> <br>
+
+        <label>Address </label>
+        <input  type="text" th:field="*{address}" aria-label="address"/>
+        <br> <br>
+
+        <label>Medical History </label>
+        <input  type="text" th:field="*{medicalHistory}" aria-label="medicalHistory"/>
+        <br> <br>
+
+        <label>Emergency Contact RelationShip        </label>
+        <input  type="text" th:field="*{emergencyContactRelationship}" aria-label="emergencyContactRelationship"/>
+        <br> <br>
+
+        <label>Emergency Contact Number </label>
+        <input  type="text" th:field="*{emergencyContactNumber}" aria-label="emergencyContactNumber"/>
+        <br> <br>
+
+<!--        <input class="ml-1 btn btn-secondary" type="submit" value="Update Patient" th:if="${mode != 'view'}"/>-->
+
+    </form>
+
+</div>
+</body>
+</html>

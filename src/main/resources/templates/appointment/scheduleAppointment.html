@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width , initial-scale=1">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+    <title>Schedule Appointment</title>
+    <style>
+        .booked{
+            background-color: gray;    /* Booked slot background */
+            color: white;              /* Text color for booked slots */
+            pointer-events: none; /* Disable click */
+            }
+
+        .available{
+            background-color: white;  /* Default background for available slots */
+            color: black;                  /* Default text color */
+            cursor: pointer;
+            }
+
+        .available:hover {
+            background-color: #cbf2cd;  /* Hover background */
+            color: black;               /* Hover text color */
+            }
+        .buttonContainer{
+        margin-left:20px;}
+        .buttons{
+        display : inline-block;
+        }
+        .buttons button {
+            border-radius: 7px;
+            padding: 5px;
+            font-size: 16px;
+        }
+#datePicker{
+border : 2px solid black;
+margin:5px 20px;}
+    </style>
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+        var datePicker = document.getElementById('datePicker');
+
+        // Event listener to trigger when a new date is selected
+    datePicker.addEventListener('change', function() {
+    var selectedDate = this.value; // Get the selected date in yyyy-MM-dd format
+    var url = new URL(window.location.href);
+
+    // Update the 'date' query parameter in the URL
+    url.searchParams.set('date', selectedDate);
+    console.log(url);
+    // Reload the page with the new date in the URL
+    window.location.href = url; });
+    });
+
+    function clickBookButton(button,slotTime) {
+    document.getElementById("slotTime").value = slotTime;
+
+    // Reset styles of all buttons to their default state
+    var buttons = document.querySelectorAll('button.available');
+    buttons.forEach(btn => {
+        btn.style.backgroundColor = ''; // Reset to default
+        btn.style.color = '';           // Reset to default
+    });
+
+    // Apply the clicked state to the current button
+    button.style.backgroundColor = '#4CAF50';  // Change to your desired clicked color
+    button.style.color = 'white';              // Change text color
+
+    }
+    </script>
+<!--    th:class="${slot.isBooked ? 'booked' : 'available'}"
+th:disabled="${slot.isBooked}"
+-->
+</head>
+<body>
+
+<h2>Schedule Appointment with Dr. <span th:text="${doctor.firstName} +' '+ ${doctor.lastName}"></span> </h2><br>
+<h2>Doctor details :-<br></h2>
+<p>ID : <span th:text="${doctor.id} "></span> </p>
+<img th:src="'data:image/jpeg;base64,' + ${doctorBase64Image}" alt="Doctor Image" width="100" >
+<P>Doctor Photo here if needed</P>
+<p>Gender : <span th:text="${doctor.gender} "></span> </p>
+<p>Specialization : <span th:text="${doctor.specialization} "></span> </p>
+<p>Qualification : <span th:text="${doctor.qualification} "></span> </p>
+<p>Experience : <span th:text="${doctor.experience} "></span> </p>
+<p>Languages: <span>English,Tamil,Hindi></span> </p>
+<p>Overall details about doctor: <span>Achieved so many, details would be listed here as small para </span> </p>
+
+<br>
+<hr />
+<!------------------------------------>
+
+<h3>Available Slots on <span th:text="${date}"></span> </h3>
+<div>
+    <!-- Date Picker -->
+<!--    <input type="date" id="datePicker" th:value="${date}" />-->
+    <hr />
+    <div class="form-group" >
+            <h4><label for="datePicker">Select Date</label></h4>
+            <input type="date" class="form-control w-25" id="datePicker" th:value="${date}">
+    </div>
+</div>
+<div><hr />
+    <h4>Morning Slots</h4>
+    <div class="buttonContainer">
+    <div class = "buttons " th:each="slot : ${morningSlots}">
+            <button   th:class="${#lists.contains(appointments, slot) ? 'booked' : 'available'} "
+                      th:text="${slot}"
+                      th:onclick="clickBookButton(this,'[(${slot})]')"> <!-- Use [[ ]] instead of ${ } for inline Thymeleaf expressions -->
+            </button>
+    </div>
+    </div>
+
+    <br><hr>
+    <h4>Evening Slots</h4>
+    <div class="buttonContainer">
+    <div class = "buttons " th:each="slot : ${eveningSlots}">
+        <button   th:class="${#lists.contains(appointments, slot) ? 'booked' : 'available'}"
+                  th:text="${slot}"
+                  th:disabled="${#lists.contains(appointments, slot)}"
+                  th:onclick="clickBookButton(this,'[(${slot})]')">
+        </button>
+    </div>
+    </div>
+</div>
+
+
+
+
+<!------------------------------------>
+<hr />
+
+<form method="get" th:action="@{/appointment/book}">
+
+
+    <input type="hidden" id ="doctorId" name="doctorId" th:value="${doctor.id}" />
+    <input type="hidden" id="patientId" name="patientId" th:value="${patient.id}" />
+    <input type="hidden" id="date" name="date" th:value="${date}" />
+    <input type="hidden" name="time" id="slotTime"/>
+    <input  class="btn btn-success ms-3" type="submit" id="bookAppointmentButton" value="Book">
+</form>
+<br>
+<br>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${mode == 'add' ? 'Add' : mode == 'update' ? 'Update' : 'View' } + ' Patient details'">
+        Patient Form </title>
+    <meta name="viewport" content="width=device-width , initial-scale=1">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+    <style>
+        label{
+        width:160px;
+        }
+        p{
+        margin-left:160px;
+        }
+    </style>
+
+
+
+</head>
+<body>
+<!--    ou can dynamically set the form action using JavaScript based on the mode.
+This approach is straightforward and doesn't require multiple form tags or complex Thymeleaf expressions.-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+<!--        const errors = [[${errors}]]; // Assuming null as a fallback for no errors-->
+
+<!--    if ([[${patient}]] !== null)    { // Only proceed if there are no errors-->
+        const form = document.getElementById('patientForm');
+        const mode = [[${mode}]];  // Assuming 'add' as a fallback, replace it with Thymeleaf syntax
+
+        if (mode === 'add') {
+            form.action = '/patient/add';
+        } else if (mode === 'update') {
+            const patientId = /*[[${patient.id}]]*/ 0; // Assuming 0 as a fallback, replace it with Thymeleaf syntax
+            form.action = '/patient/update/' + patientId;
+        } else if (mode === 'view') {
+            form.method = 'get';
+            const patientId = /*[[${patient.id}]]*/ 0;
+            form.action = '/patient/get/' + patientId;
+        }
+<!--    }-->
+ });
+</script>
+
+<div class="container">
+
+    <div th:if="${error}">
+        <p th:text="${error}" style="color: red;"></p>
+    </div>
+
+    <div th:unless="${error}">
+    <h3 class="text-center mt-3 mb-3 " th:text=" ${mode == 'add' ? 'Add' : mode == 'update' ? 'Update' : 'View' } + ' Patient details' "> Add Patient Form</h3>
+<!--        <form th:if="${mode == 'add'}" th:object="${patient}" th:action="@{/patient/add} " method="post">-->
+<!--        <form  th:if="${mode == 'view'}" th:object="${patient}" method="get">-->
+<!--        <form th:if="${mode == 'update'}" th:object="${patient}" th:action="@{/patient/update/{id}(id=${patient.id})}" method="post">-->
+
+        <!-- Combined form tag -->
+<!--        <form-->
+<!--                th:unless="${error}"-->
+<!--                th:action="${-->
+<!--                 mode == 'add' ? '@{/patient/add}': '@{/patient/update/{id}(id=${patient.id})}'-->
+<!--                }"-->
+<!--                th:object="${patient}"-->
+<!--                method="post"-->
+<!--                >-->
+<!--add and post is not working -->
+        <form th:object="${patient}" method="post" id="patientForm">
+            <!-- Your form fields go here -->
+
+
+
+        <input th:if="${mode == 'update'}" type="hidden" name="_method" value="put"/>
+        <!--        HiddenHttpMethodFilter: This filter looks for a request parameter named _method.
+                    If it finds it, it overrides the HTTP method of the request with the value of this parameter.
+        -->
+
+        <label >Id</label>
+        <input type="text" th:field="*{id}" aria-label="id"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('id')}" >
+            <p class="text-danger" th:errors="*{id}"></p>
+        </div>
+        <br>
+
+        <label >First Name </label>
+        <input  type="text" th:field="*{firstName}" aria-label="firstName"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('firstName')}">
+            <p class="text-danger" th:errors="*{firstName}"></p>
+        </div>
+        <br>
+
+        <label>Last Name  </label>
+        <input  type="text" th:field="*{lastName}" aria-label="lastName"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('lastName')}">
+            <p class="text-danger" th:errors="*{lastName}"></p>
+        </div> <br>
+
+        <label>Age </label>
+        <input  type="text" th:field="*{age}" aria-label="age"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('age')}">
+            <p class="text-danger" th:errors="*{age}"></p>
+        </div> <br>
+
+        <label>Gender </label>
+        <input  type="text" th:field="*{gender}" aria-label="gender"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('gender')}">
+            <p class="text-danger" th:errors="*{gender}"></p>
+        </div> <br>
+
+        <label>Email </label>
+        <input  type="text" th:field="*{email}" aria-label="email"/>
+        <br>
+        <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('email')}">
+            <p class="text-danger" th:errors="*{email}"></p>
+        </div> <br>
+
+        <label>Phone </label>
+        <input  type="text" th:field="*{phone}" aria-label="phone"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('phone')}">
+            <p class="text-danger" th:errors="*{phone}"></p>
+        </div> <br>
+
+        <label>Height </label>
+        <input  type="text" th:field="*{height}" aria-label="height"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('height')}">
+            <p class="text-danger" th:errors="*{height}"></p>
+        </div> <br>
+
+        <label>Weight </label>
+        <input  type="text" th:field="*{weight}" aria-label="weight"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('weight')}">
+            <p class="text-danger" th:errors="*{weight}"></p>
+        </div> <br>
+
+        <label>City </label>
+        <input  type="text" th:field="*{city}" aria-label="city"/>
+        <br>
+        <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('city')}">
+            <p class="text-danger" th:errors="*{city}"></p>
+        </div> <br>
+
+        <label>Address </label>
+        <input  type="text" th:field="*{address}" aria-label="address"/>
+        <br>
+        <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('address')}">
+            <p class="text-danger" th:errors="*{address}"></p>
+        </div> <br>
+
+        <label>Medical History </label>
+        <input  type="text" th:field="*{medicalHistory}" aria-label="medicalHistory"/>
+        <br>
+        <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('medicalHistory')}">
+            <p class="text-danger" th:errors="*{medicalHistory}"></p>
+        </div> <br>
+
+        <label>Emergency Contact RelationShip        </label>
+        <input  type="text" th:field="*{emergencyContactRelationship}" aria-label="emergencyContactRelationship"/>
+        <br>
+        <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('emergencyContactRelationship')}">
+            <p class="text-danger" th:errors="*{emergencyContactRelationship}"></p>
+        </div> <br>
+
+        <label>Emergency Contact Number </label>
+        <input  type="text" th:field="*{emergencyContactNumber}" aria-label="emergencyContactNumber"/>
+        <br>
+        <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('emergencyContactNumber')}">
+            <p class="text-danger" th:errors="*{emergencyContactNumber}"></p>
+        </div> <br>
+        <input th:unless="${mode == 'view'}" class="ml-1 btn btn-secondary" type="submit" th:value=" ${mode == 'add' ? 'Add' : 'Update'} + ' patient' ">
+      </form>
+
+    </div>
+
+</div>
+</body>
+</html>

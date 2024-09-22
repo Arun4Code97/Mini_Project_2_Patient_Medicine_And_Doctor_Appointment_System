@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patients List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+
+<div th:replace="~{ common/header :: header}">
+    will be replaced complete div
+</div>
+
+<div class="container">
+
+    <h3 class='mt-5  text-center'>Patients List</h3> <br>
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Age</td>
+                <td>Gender</td>
+                <td>Email</td>
+                <td>Phone</td>
+                <td>Height</td>
+                <td>Weight</td>
+                <td>City</td>
+                <td>Address</td>
+                <td>Medical History</td>
+                <td>Emergency Contact Relationship</td>
+                <td>Emergency Contact Number</td>
+          </tr>
+        </thead>
+        <tbody>
+            <tr th:each="patient:${patientList}" >
+                <td th:text="${patient.firstName}" >First Name</td>
+                <td th:text="${patient.lastName}" >Last Name</td>
+                <td th:text="${patient.age}" >Age</td>
+                <td th:text="${patient.gender}" >Gender</td>
+                <td th:text="${patient.email}" >Email</td>
+                <td th:text="${patient.phone}" >Phone</td>
+                <td th:text="${patient.height}" >Height</td>
+                <td th:text="${patient.weight}" >Weight</td>
+                <td th:text="${patient.city}" >City</td>
+                <td th:text="${patient.address}" >Address</td>
+                <td th:text="${patient.medicalHistory}" >Medical History</td>
+                <td th:text="${patient.emergencyContactRelationship}">Emergency Contact Relationship</td>
+                <td th:text="${patient.emergencyContactNumber}">Emergency Contact Number</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="~{ common/footer :: footer}">
+    will be replaced but it has no nested div tags
+</div>
+
+</body>
+</html>

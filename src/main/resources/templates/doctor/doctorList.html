@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctors List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+
+<div th:replace="~{ common/header :: header}">
+    will be replaced complete div
+</div>
+
+<div class="container">
+
+    <h3 class='mt-5  text-center'>Doctors List</h3> <br>
+    <table class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <td>Id</td>
+            <td>Image</td>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Gender</td>
+            <td>Email</td>
+            <td>Specialization</td>
+            <td>Qualification</td>
+            <td>Experience</td>
+            <td>Phone Number</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="doctorData:${doctorDataList}" >
+            <td th:text="${doctorData.doctor.id}" >Id</td>
+            <td>
+                <img th:src="'data:image/jpeg;base64,' + ${doctorData.base64Image}" alt="Doctor Image" width="100">
+            </td>
+            <td th:text="${doctorData.doctor.firstName}" >First Name</td>
+            <td th:text="${doctorData.doctor.lastName}" >Last Name</td>
+            <td th:text="${doctorData.doctor.gender}" >Gender</td>
+            <td th:text="${doctorData.doctor.email}" >Email</td>
+            <td th:text="${doctorData.doctor.specialization}" >Specialization</td>
+            <td th:text="${doctorData.doctor.qualification}" >Qualification</td>
+            <td th:text="${doctorData.doctor.experience}" >Experience</td>
+            <td th:text="${doctorData.doctor.phoneNumber}" >Phone Number</td>
+
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${error}" >
+        <p class="ml-4" th:text="${error}" style="color: red;"></p>
+    </div>
+</div>
+
+<div th:replace="~{ common/footer :: footer}">
+    will be replaced but it has no nested div tags
+</div>
+
+</body>
+</html>

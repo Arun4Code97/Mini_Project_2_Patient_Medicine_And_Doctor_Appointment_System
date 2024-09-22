@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title  th:text="${ mode == 'add' ? 'Add' : mode == 'update' ? 'Update'
+            : 'Delete'  + ' Response page' }" >Replace here
+    </title>
+<!--    <title th:text="${mode == 'add' ? 'Add' : mode == 'update' ? 'Update' : 'View'} + ' Patient Form'">Patient Form</title>-->
+
+</head>
+<body>
+<div th:unless="${error}">
+    <h3 th:text="${mode=='add' ? 'Added' : mode =='update' ? 'Updated'
+            :'Deleted' + ' successfully!!'}">Replacing
+    </h3>
+</div>
+
+<div th:if="${error}">
+    <h4 class="text-danger mt-3 mb-3" th:text="${error}"> error message </h4>
+</div>
+
+
+
+</body>
+</html>

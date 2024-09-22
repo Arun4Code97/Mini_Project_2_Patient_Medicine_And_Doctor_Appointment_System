@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Prescribe Medicines By Doctor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Medicines Prescribed here by Doctor:</h2>
+    <table class="table table-bordered mt-4">
+        <thead>
+        <tr>
+            <th>Medicine Name</th>
+            <th>Dosage</th>
+            <th>Duration</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="medicine : ${medicines}">
+            <td th:text="${medicine.name}"></td>
+            <td th:text="${medicine.dosage}"></td>
+            <td th:text="${medicine.duration}"></td>
+            <td>
+                <a class="btn btn-primary mr-2" th:href="@{/doctor/{doctorId}/updateMedicine/{medicineId}(doctorId=${doctorId} ,medicineId =${medicine.id})}" role="button">Update</a>
+
+                <a class="btn btn-danger mr-2" th:href="@{/doctor/{doctorId}/deleteMedicine/{medicineId}(doctorId=${doctorId} ,medicineId =${medicine.id})}" role="button">Delete</a>
+
+<!--                <form th:action="@{/medicine/delete/{id}(id=${medicine.id}) }" method="post">-->
+<!--                    <input type="hidden" name="_method" value="delete" />-->
+<!--                    <input type="submit" id="submitDelete" value="Delete medicine" style="display:none;" />-->
+<!--                </form>-->
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+    <p> Need to update below button tag href link as per requirement</p>
+    <a th:href="@{/patient/list}" class="btn btn-primary">Back to Patients</a>
+</div>
+</body>
+</html>

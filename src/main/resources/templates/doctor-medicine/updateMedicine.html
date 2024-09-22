@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Medicine</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Update Medicines</h2>
+    <form th:action="@{/doctor/{doctorId}/updateMedicine/{medicineId}(doctorId = ${doctorId}, medicineId=${medicine.id})}"
+          th:object="${medicine}" method="post">
+        <!-- Medicine Form Fields -->
+        <input type="text" th:field="*{name}" placeholder="Medicine Name" required>
+        <input type="text" th:field="*{dosage}" placeholder="Dosage" required>
+        <input type="text" th:field="*{duration}" placeholder="Duration" required>
+        <button type="submit" class="btn btn-primary">Update Medicine</button>
+    </form>
+</div>
+</body>
+</html>
