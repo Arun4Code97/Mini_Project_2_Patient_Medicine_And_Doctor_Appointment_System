@@ -1,0 +1,31 @@
+        .booked{
+            background-color: gray;    /* Booked slot background */
+            color: black;              /* Text color for booked slots */
+            pointer-events: none; /* Disable click */
+            }
+
+        .available{
+            background-color: white;  /* Default background for available slots */
+            color: black;                  /* Default text color */
+            cursor: pointer;
+            }
+
+        .available:hover {
+            background-color: #cbf2cd;  /* Hover background */
+            color: black;               /* Hover text color */
+            }
+
+        .buttonContainer{
+            margin-left:20px;}
+
+        .buttons{
+            display : inline-block; }
+
+        .buttons button {
+            border-radius: 7px;
+            padding: 5px;
+            font-size: 16px;}
+
+        #datePicker{
+            border : 2px solid black;
+            margin:5px 20px;}

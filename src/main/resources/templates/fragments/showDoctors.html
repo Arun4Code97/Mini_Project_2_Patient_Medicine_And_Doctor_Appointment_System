@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="profileCards">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="eachData : ${doctorsData}">
+<!--            /schedule/{doctorId}/{patientId}-->
+            <a class="text-decoration-none card-link" th:href="@{/appointment/schedule/{doctorId}/{patientId}
+                                                                (doctorId=${eachData.doctor.id},
+                                                                  patientId=${patient.id}) }" >
+                <div class="card h-100 custom-card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center text-danger mb-3" th:text="${eachData.doctor.specialization}"></h3>
+                        <div class="text-center mb-4">
+                            <img class="rounded-circle shadow " th:src="'data:image/jpeg;base64,' + ${eachData.base64Image}" alt="Doctor Image" width="150" height="150"  src="">
+                        </div>
+                        <h4 class="text-center mb-3"> <span th:text="${eachData.doctor.firstName + ' ' + eachData.doctor.firstName} " > </span> </h4>
+                        <p>Gender : <span class="text-primary fs-6 " th:text="${eachData.doctor.gender} "></span> </p>
+                        <p>Experience: <span class="text-primary fs-6 " th:text="${eachData.doctor.experience} + ' years'"></span> </p>
+                        <p>Qualification : <span class="text-primary fs-6 " th:text="${eachData.doctor.qualification} "></span> </p>
+                        <p>Languages: <span class="text-primary  fs-6 ">English,Tamil,Hindi</span> </p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</div>
+
+</html>

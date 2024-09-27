@@ -1,0 +1,36 @@
+        body, html {
+            height: 100%;
+        }
+
+        .wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: #e3f2fd;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #343a40;
+            color: white;
+        }
+        .innerContainer{
+        border:2px solid black;
+        border-radius:8px;
+        margin-left:30px;
+        margin-top:20px;
+        padding:30px;
+        }
+
+       .custom-card:hover {
+            background-color: #D3D3D3;}

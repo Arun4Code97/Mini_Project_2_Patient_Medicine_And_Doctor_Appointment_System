@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
@@ -17,4 +18,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
 @Query(value = "SELECT * FROM appointment WHERE doctor_id = :doctorId AND appointment_date = :appointmentDate", nativeQuery = true)
 List<Appointment> findByDoctorIdAndAppointmentDate(@Param("doctorId") Long doctorId, @Param("appointmentDate") LocalDate appointmentDate);
     List<Appointment> findAllByPatient(Patient patient);
+
+    Appointment findByDoctorIdAndAppointmentDateAndAppointmentTime(Long doctorId, LocalDate date, LocalTime time);
+
+    void deleteByPatientId(Long patientId);
 }

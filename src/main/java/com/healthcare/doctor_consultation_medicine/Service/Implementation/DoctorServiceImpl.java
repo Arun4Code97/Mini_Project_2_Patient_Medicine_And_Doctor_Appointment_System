@@ -26,7 +26,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
     @Override
     public boolean isExistByEmail(String email) {
-        Optional<Doctor> doctor = doctorRepository.findByEmail(email);
+        Optional<Doctor> doctor = doctorRepository.findOneByEmail(email);
         return doctor.isPresent();
     }
 
@@ -57,5 +57,15 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public void deletePatientById(Long id) {
         doctorRepository.deleteById(id);
+    }
+    @Override
+    public Optional<DoctorDto> findDoctorByEmailId(String email){
+        Optional<Doctor> doctor = doctorRepository.findOneByEmail(email);
+        return doctor.map(DoctorMapper::mapToDto);
+    }
+
+    @Override
+    public List<DoctorDto> getDoctorsBySpecialization() {
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,62 +14,64 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@ToString(exclude = "medicines")
 public class PatientDto {
 
     private String id;
 
-    @NotBlank(message = "Patient first name can not be blank")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ,.'-]{1,29}$", message = "Invalid input: It must start with a letter and contain 2 to 30 characters, including letters and special characters(, .'-)")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ,.'-]{1,29}$", message = "Enter Valid inputs: {A-Z,a-z., '-}")
     private String firstName;
 
-    @NotBlank(message = "Patient last name can not be blank")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ,.'-]{1,29}$", message = "Invalid input: It must start with a letter and contain 2 to 30 characters, including letters and special characters(, .'-)")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ,.'-]{1,29}$", message = "Enter Valid inputs: {A-Z,a-z., '-}")
     private String lastName;
 
-    @NotBlank(message = "Patient age can not be blank")
-    @Pattern(regexp = "^[0-9]{1,3}$", message = "Invalid input : Only numbers are allowed with up to 3 digits max")
+    private String password;
+
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[0-9]{1,3}$", message = "Enter valid number up to 3 digits")
     private String age;
 
-    @NotBlank(message = "Patient gender can not be blank")
-    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Invalid input: It should contain 1 to 15 alphabets characters")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Enter Valid inputs: {A-Z,a-z., '-}")
     private String gender;
 
-    @Email(message = "Patient email ID must be valid ")
-    @NotBlank(message = "Patient email ID must not be blank")
+    @Email(message = "Enter Valid email Id")
+    @NotBlank(message = "Field should not be blank")
     private String email;
 
-    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid input: It should start with 6, 7, 8, or 9 and contain exactly 10 digits.")
-    @NotBlank(message = "Patient phone number must not be blank")
+    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Should start with above 6 and contain exactly 10 digits.")
+    @NotBlank(message = "Field should not be blank")
     private String phone;
 
-    @NotBlank(message = "Patient height must not be blank")
-    @Pattern(regexp = "^[0-9]{1,3}(\\.[0-9]{1,2})?$" , message = "Invalid input: It must be a number with up to 3 digits and if .(Dot) present, 1 or 2 digits must be after it" )
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[0-9]{1,3}(\\.[0-9]{1,2})?$" , message = "Valid inputs: {103.25,10.26,60.1}" )
     private String height;
 
-    @NotBlank(message = "Patient weight must not be blank")
-    @Pattern(regexp = "^[0-9]{1,3}(\\.[0-9]{1,2})?$" , message = "Invalid input: It must be a number with up to 3 digits and if .(Dot) present, 1 or 2 digits must be after it" )
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[0-9]{1,3}(\\.[0-9]{1,2})?$" , message = "Valid inputs: {103.25,175.26,60.1}" )
     private String weight;
 
-    @NotBlank(message = "Patient city must not be blank")
-    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Invalid input: It should contain 1 to 15 alphabets characters")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Alphabets characters allowed and max 15")
     private String city;
 
-    @NotBlank(message = "Patient address must not be blank")
-    @Pattern(regexp = "^[A-Za-z0-9\\-.,:/()#& ]{1,255}$", message = "Invalid input: Allowed characters (A-Z,a-z,0-9), (-, ./:()#&)  and up to 256 characters.")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[A-Za-z0-9\\-.,:/()#& ]{1,255}$", message = "Allowed characters (A-Z,a-z,0-9), (-, ./:()#&)  and up to 256 characters.")
     private String address;
 
-    @NotBlank(message = "Patient medical history must not be blank")
-    @Pattern(regexp = "^[A-Za-z0-9\\-.,:/()#& ]{1,1024}$", message = "Invalid input: Allowed characters (A-Z,a-z,0-9) , (-, ./:()#&) and up to 256 characters.")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[A-Za-z0-9\\-.,:/()#& ]{1,1024}$", message = "Allowed characters (A-Z,a-z,0-9) , (-, ./:()#&) and up to 256 characters.")
     private String medicalHistory;
 
     private List<MedicineDto> medicines = new ArrayList<>();
 
-    @NotBlank(message = "Patient relation type must not be blank")
-    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Invalid input: It should contain 1 to 15 alphabets characters")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Alphabets characters allowed and max 15")
     private String emergencyContactRelationship;
 
-    @NotBlank(message = "Patient emergency contact must not be blank")
-    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid input : It should start with 6, 7, 8, or 9 and contain exactly 10 digits.")
+    @NotBlank(message = "Field should not be blank")
+    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Should start with above 6 and contain exactly 10 digits.")
     private String emergencyContactNumber;
 }

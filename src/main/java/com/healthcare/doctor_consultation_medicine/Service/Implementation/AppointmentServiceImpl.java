@@ -1,5 +1,7 @@
 package com.healthcare.doctor_consultation_medicine.Service.Implementation;
 
+import com.healthcare.doctor_consultation_medicine.DTO.PatientDto;
+import com.healthcare.doctor_consultation_medicine.Mapper.PatientMapper;
 import com.healthcare.doctor_consultation_medicine.Model.Appointment;
 import com.healthcare.doctor_consultation_medicine.Model.Doctor;
 import com.healthcare.doctor_consultation_medicine.Model.Patient;
@@ -37,5 +39,11 @@ public class AppointmentServiceImpl implements AppointmentService {
                 true);
         appointmentRepository.save(savedAppointment);
         return savedAppointment;
+    }
+    public PatientDto fetchPatientRecord(Long doctorId, LocalDate date, LocalTime time){
+        Appointment appointment = appointmentRepository.findByDoctorIdAndAppointmentDateAndAppointmentTime(doctorId,date,time);
+        Patient patient = appointment.getPatient();
+        System.out.println("\n\n\nfetched Patient ID using member in patient  entity class \t" + patient.getId());
+        return PatientMapper.toMapPatientDto(patient);
     }
 }

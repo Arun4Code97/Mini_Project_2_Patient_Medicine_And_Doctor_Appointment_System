@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MedicineServiceImpl implements MedicineService {
     private final MedicineRepository medicineRepository;
+
 @Autowired
 DoctorRepository doctorRepository;
 @Autowired
@@ -37,6 +39,11 @@ DoctorRepository doctorRepository;
     public List<MedicineDto> getAllMedicine() {
         List<Medicine> medicineList = medicineRepository.findAll();
         return medicineList.stream().map(MedicineMapper::toMapDto).toList();
+    }
+    @Override
+    public List<MedicineDto> getAllMedicineByPatientId(Long patientId){
+        List<Medicine> medicineList = medicineRepository.findAllByPatientId(patientId);
+        return medicineList.stream().map(MedicineMapper::toMapDto).collect(Collectors.toList());
     }
 
     @Override

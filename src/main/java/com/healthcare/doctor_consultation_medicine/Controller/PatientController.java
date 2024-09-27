@@ -67,7 +67,7 @@ public class PatientController {
     @GetMapping("/update/{id}")
     public String handlerMethodForUpdateForm (@PathVariable Long id,Model model)
     {
-        model.addAttribute("patient", new PatientDto());
+//        model.addAttribute("patient", new PatientDto());
 
         Optional<PatientDto> retrivedPatient = patientService.getPatientById(id);
 
@@ -80,41 +80,41 @@ public class PatientController {
 
         model.addAttribute("id",id);
         model.addAttribute("mode","update");
-        System.out.println("\n\n\n\n from get-update"+ id);
-        return "patient/patientComponent";
+        model.addAttribute("fragmentName","showPatientForm");
+        return "patient/patientPortal";
     }
-    @PutMapping("/update/{id}")
-    public String handlerMethodForUpdatePatient(@ModelAttribute("id") Long id, @Valid @ModelAttribute("patient") PatientDto patientDto,BindingResult result,Model model){
-        System.out.println("\n\n\n\n from put-update"+ id);
-        if(result.hasErrors()) {
-            return "patient/patientComponent";
-        }
-        PatientDto updatedPatient = patientService.updatePatientById(id,patientDto);
-
-        if (updatedPatient == null)
-            model.addAttribute("error", "Patient ID " + id + " does not exist");
-
-//        System.out.println("\n\n\n\nFrom Update @PutMapping -> After update - The patient details : " + updatedPatient +"\n\n\n\n");
-        model.addAttribute("updatedPatient",updatedPatient);
-        model.addAttribute("mode","update");
-
-        return "HttpResponse";
-    }
+//    @PutMapping("/update/{id}")
+//    public String handlerMethodForUpdatePatient(@ModelAttribute("id") Long id, @Valid @ModelAttribute("patient") PatientDto patientDto,BindingResult result,Model model){
+//        System.out.println("\n\n\n\n from put-update"+ id);
+//        if(result.hasErrors()) {
+//            return "patient/patientComponent";
+//        }
+//       patientService.updatePatientById(id,patientDto);
+//
+//        if (updatedPatient == null)
+//            model.addAttribute("error", "Patient ID " + id + " does not exist");
+//
+////        System.out.println("\n\n\n\nFrom Update @PutMapping -> After update - The patient details : " + updatedPatient +"\n\n\n\n");
+//        model.addAttribute("updatedPatient",updatedPatient);
+//        model.addAttribute("mode","update");
+//
+//        return "HttpResponse";
+//    }
     @GetMapping("/delete/{id}")
     public String handlerMethodForDeleteRequest(@PathVariable Long id,Model model)
     {
     model.addAttribute("id",id);
     return "patient/deletePatient";
     }
-    @DeleteMapping("/delete/{id}")
-    public String handlerMethodForDeletePatient(@PathVariable Long id, Model model) {
-        boolean isDeleted = patientService.deletePatientById(id);
-        if (!isDeleted) {
-            model.addAttribute("error", "Patient ID " + id + " does not exist");
-        }
-        model.addAttribute("mode", "delete");
-        return "httpResponse"; // Render the response page
-    }
+//    @DeleteMapping("/delete/{id}")
+//    public String handlerMethodForDeletePatient(@PathVariable Long id, Model model) {
+//        boolean isDeleted = patientService.deletePatientById(id);
+//        if (!isDeleted) {
+//            model.addAttribute("error", "Patient ID " + id + " does not exist");
+//        }
+//        model.addAttribute("mode", "delete");
+//        return "httpResponse"; // Render the response page
+//    }
 //---------------------------------------------------------------------------------
     // View prescribed medicines for a patient
 //-------------------------------------------------------------------------------

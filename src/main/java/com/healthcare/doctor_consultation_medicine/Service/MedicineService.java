@@ -9,6 +9,7 @@ public interface MedicineService {
     public boolean isExistById(Long id);
     public MedicineDto saveMedicine(MedicineDto medicineDto);
     public List<MedicineDto> getAllMedicine();
+    public List<MedicineDto> getAllMedicineByPatientId(Long patientId);
     public MedicineDto getSingleMedicineById(Long id);
     public void deleteMedicineById(Long id);
 //--------------------Including for doctor to add/update/delete medicines

@@ -30,4 +30,12 @@ public class MedicineDto {
 
     private Doctor doctor;
     private Patient patient;
+    @Override
+    public String toString(){
+        return "MedicineDto{ " +
+                ",Id = " + id +
+                ", Name = " + name +
+                ", Dosage = " + dosage +
+                ", Duration = " + duration + "}";
+    }
 }

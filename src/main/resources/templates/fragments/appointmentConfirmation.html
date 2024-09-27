@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<div th:fragment="conform">
+    <p>Appointment with Dr.<span th:text="${doctor.firstName + ' ' + doctor.lastName } "></span> on <span th:text="${appointment.appointmentDate}"></span>
+        at <span th:text="${appointment.appointmentTime}"></span> has been successfully booked.</p>
+</div>

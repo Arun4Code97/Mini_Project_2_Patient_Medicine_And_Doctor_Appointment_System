@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface DoctorService {
     public DoctorDto saveDoctorWithImage(DoctorDto doctorDto, MultipartFile imageFile) throws IOException;
@@ -18,4 +19,8 @@ public interface DoctorService {
 //    DoctorDto updateDoctorById(Long id, DoctorDto doctorDto);
 
     void deletePatientById(Long id);
+
+    Optional<DoctorDto> findDoctorByEmailId(String email);
+
+    List<DoctorDto> getDoctorsBySpecialization();
 }

@@ -25,6 +25,9 @@ public class DoctorDto {
     private String lastName;
     @NotBlank(message = "Gender should not be blank")
     @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "1 to 15 alphabets characters only allowed")
+
+    private String password;
+
     private String gender;
     @Email(message = "email ID should be valid ")
     @NotBlank(message = "email ID should not be blank")
@@ -49,4 +52,16 @@ public class DoctorDto {
 
     private List<MedicineDto> medicines = new ArrayList<>();
     private List<Appointment> appointments = new ArrayList<>();
+    @Override
+    public String toString(){
+        return "DoctorDto{" +
+        ", Id = " + id +
+        ", Name = " + firstName + " " + lastName +
+        ", Gender = " + gender +
+        ", Email = " + email +
+        ", Specialization = " + specialization  +
+        ", Qualification = " + qualification +
+        ", Experience = " +experience +
+        ", Phone = " + phoneNumber + "}"   ;
+    }
 }

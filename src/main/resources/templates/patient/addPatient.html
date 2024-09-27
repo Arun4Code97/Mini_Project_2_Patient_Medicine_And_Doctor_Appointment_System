@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient Page</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/patientPortal.css}">
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar and Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-secondary text-white sidebar sidebar-sticky">
+            <div class="position-sticky pt-3">
+                <h3 class="text-white ">Add Patient Portal</h3>
+                <ul class="nav flex-column">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/hospital}">
+                            Log out
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="pt-3 pb-2 mb-3 border-bottom">
+                <h2>Add Patient</h2>
+
+                <div class="innerContainer" th:if="${showPatientForm}" >
+                    <h4 class="text-start">Patient Details</h4>
+                    <div  th:insert="~{fragments/showPatientForm :: patientForm}"></div>
+                </div>
+                <div class="innerContainer" th:if="${setPassword}" >
+                    <h4 class="text-start">Set Password</h4>
+                    <div  th:insert="~{fragments/setPasswordForm :: password}"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white">
+        <div th:replace="~{common/footer :: footer}"></div>
+    </footer>
+</div>
+
+<script th:src="@{/js/patientPortal.js}"></script>
+
+</body>
+
+</html>
