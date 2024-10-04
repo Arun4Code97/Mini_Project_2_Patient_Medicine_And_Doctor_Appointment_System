@@ -34,7 +34,7 @@ public class PatientDto {
     private String age;
 
     @NotBlank(message = "Field should not be blank")
-    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Enter Valid inputs: {A-Z,a-z., '-}")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ]{1,15}$", message = "Enter Valid inputs: {A-Z,a-z }")
     private String gender;
 
     @Email(message = "Enter Valid email Id")
@@ -54,7 +54,7 @@ public class PatientDto {
     private String weight;
 
     @NotBlank(message = "Field should not be blank")
-    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Alphabets characters allowed and max 15")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ]{1,15}$", message = "Alphabets characters allowed and max 15")
     private String city;
 
     @NotBlank(message = "Field should not be blank")
@@ -68,7 +68,7 @@ public class PatientDto {
     private List<MedicineDto> medicines = new ArrayList<>();
 
     @NotBlank(message = "Field should not be blank")
-    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "Alphabets characters allowed and max 15")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ]{1,15}$", message = "Alphabets characters allowed and max 15")
     private String emergencyContactRelationship;
 
     @NotBlank(message = "Field should not be blank")

@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<div th:fragment="conform">
+    <p>Appointment with <span class="fs-5 text-primary" th:text="${ ' Dr.' + doctor.firstName + ' ' + doctor.lastName } "></span> on <span class="fs-5 text-primary" th:text="${appointment.appointmentDate}"></span>
+        at <span class="fs-5 text-primary" th:text="${appointment.appointmentTime}"></span> has been successfully booked.</p>
+</div>

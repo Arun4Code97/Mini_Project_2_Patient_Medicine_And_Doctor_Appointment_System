@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width , initial-scale=1">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+    <title>Booked Appointment</title>
+</head>
+<body>
+<div th:fragment="content">
+
+     <div class="form-group" >
+        <h4><label for="datePicker">Select Date</label></h4>
+        <input type="date" class="form-control w-25" id="datePicker" th:value="${date}">
+    </div>
+
+    <div>
+        <h4> Morning Slots </h4>
+        <div class="buttonContainer">
+            <div class = "buttons " th:each="slot : ${morningSlots}">
+                <button   th:class="${#lists.contains(appointments, slot) ? 'booked' : 'available'} "
+                      th:text="${slot}"
+                      th:onclick="clickBookButton(this,'[(${slot})]')"> <!-- Use [[ ]] instead of ${ } for inline Thymeleaf expressions -->
+                </button>
+             </div>
+        </div>
+    </div>
+
+    <div>
+        <h4>Evening Slots Booked</h4>
+        <div class="buttonContainer">
+            <div class = "buttons " th:each="slot : ${eveningSlots}">
+                <button   th:class="${#lists.contains(appointments, slot) ? 'booked' : 'available'}"
+                      th:text="${slot}"
+                      th:onclick="clickBookButton(this,'[(${slot})]')">
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <form method="get" th:action="@{/appointment/goToConsultationRoom}" onsubmit="return validateScheduleAppointmentForm(event)">
+
+        <input type="hidden" id ="doctorId" name="doctorId" th:value="${doctor.id}" />
+        <input type="hidden" id="date" name="date" th:value="${date}" />
+        <input type="hidden" name="time" id="slotTime"/>
+        <p class="mt-2" id="errorMessage" style="color: red; display: none;">Please select a time slot.</p>
+        <input  class="btn btn-success ms-3" type="submit"  value="Go to Consultation Room">
+    </form>
+
+</div>
+</body>
+</html>

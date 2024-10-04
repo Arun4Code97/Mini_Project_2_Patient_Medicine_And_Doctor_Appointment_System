@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="content">
+
+    <form class="form-inline" th:object="${doctor}" method="post" id="doctorForm" enctype="multipart/form-data" >
+        <!-- Your form fields go here -->
+        <input type="hidden" id="modeHiddenInput" th:value="${mode}" />
+        <input type="hidden"  th:if="${mode == 'update'}" name="_method" value="put"/>
+        <!--        HiddenHttpMethodFilter: This filter looks for a request parameter named _method.
+                    If it finds it, it overrides the HTTP method of the request with the value of this parameter.
+        -->
+        <div class="row mb-3 " th:unless="${mode == 'add'}">
+            <div class="col-md-3 ">
+                <label class="form-label " >Your Id</label>
+                <input class="form-control" type="text" th:field="*{id}" id="idInput" aria-label="id"/>
+                <div    th:if="${#fields.hasErrors('id')}" >
+                    <p class="text-danger" th:errors="*{id}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3 ">
+            <div class="col-md-3">
+                <label class="form-label " >First Name </label>
+                <input class="form-control"  type="text" th:field="*{firstName}" aria-label="firstName"/>
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('firstName')}">
+                    <p class="text-danger" th:errors="*{firstName}"></p>
+                </div>
+            </div>
+            <div class="col-md-3 ">
+                <label class="form-label ">Last Name  </label>
+                <input class="form-control" type="text" th:field="*{lastName}" aria-label="lastName"/>
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('lastName')}">
+                    <p class="text-danger" th:errors="*{lastName}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label " >Gender </label>
+                <input class="form-control" type="text" th:field="*{gender}" aria-label="gender"/>
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('gender')}">
+                    <p class="text-danger" th:errors="*{gender}"></p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label " >Qualification </label>
+                <input class="form-control" type="text" th:field="*{qualification}" aria-label="weight"/>
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('qualification')}">
+                    <p class="text-danger" th:errors="*{qualification}"></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label " >Specialization </label>
+                <input class="form-control" type="text" th:field="*{specialization}" aria-label="height"/>
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('specialization')}">
+                    <p class="text-danger" th:errors="*{specialization}"></p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label " >Experience </label>
+                <input class="form-control" type="text" th:field="*{experience}" aria-label="experience"></input>
+                <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('experience')}">
+                    <p class="text-danger" th:errors="*{experience}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label " >Email </label>
+                <input class="form-control " type="text" th:field="*{email}" aria-label="email"/>
+                <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('email')}">
+                    <p class="text-danger" th:errors="*{email}"></p>
+                </div>
+                <div   th:if="${errorExistEmail}">
+                    <p class="text-danger" th:text="${errorExistEmail}"> </p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label ">Phone </label>
+                <input class="form-control" type="text" th:field="*{phone}" aria-label="phone"/>
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('phone')}">
+                    <p class="text-danger" th:errors="*{phone}"></p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-3" >
+                <label for="imageFile"><span th:text="${mode == 'view' ? 'Profile Picture' : mode =='add' ? 'Upload Profile Picture' : 'Change profile picture '}"></span></label>
+                    <div th:unless="${mode == 'add'}">
+                        <img class="rounded-circle shadow mt-2 mb-2" th:src="'data:image/jpeg;base64,' + ${doctorBase64Image}" alt="Doctor Image" width="150" height="150"   src="">
+                    </div>
+                <input th:unless="${mode == 'view'}" type="file" id="imageFile" name="imageFile" accept="image/*" >
+                <div   th:if="${emptyImageError}">
+                    <p class="text-danger" th:errors="${emptyImageError}"></p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row mb-3" th:if="${mode == 'update'}" >
+            <div class="col-md-3"  >
+                <label class="form-label fw-bold">Update password here </label>
+                <input class="form-control" type="text" th:field="*{password}" aria-label="password"/>
+                <div   th:if="${#fields.hasErrors('password')}">
+                    <p class="text-danger" th:errors="*{password}"></p>
+                </div>
+            </div>
+        </div>
+
+        <input th:unless="${mode == 'view'}" class="ml-1 btn btn-secondary" type="submit" th:value=" ${mode == 'add' ? 'Add' : 'Update'} + ' doctor' ">
+        <br>
+
+    </form>
+</div>

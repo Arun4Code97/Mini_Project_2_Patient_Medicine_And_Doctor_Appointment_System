@@ -77,4 +77,14 @@ public void deletePatientById(Long id){
         return retrievedPatient.map(PatientMapper::toMapPatientDto);
     }
 
+    @Override
+    public void setPassword(Long patientId, String confirmPassword) {
+        patientRepository.findById(patientId).ifPresent(
+                patient -> {
+                    patient.setPassword(confirmPassword);
+                    patientRepository.save(patient);
+                } );
+
+    }
+
 }

@@ -3,36 +3,35 @@
 
 <div th:fragment="patientForm">
 
-    <form class="form-inline" th:object="${patient}"  th:action="@{/hospital/patientPortal/updateProfile/{id}(id=${patient.id}) }" method="post" id="patientForm">
+    <form class="form-inline" th:object="${patient}" method="post" id="patientForm">
         <!-- Your form fields go here -->
         <input type="hidden" id="modeHiddenInput" th:value="${mode}" />
         <input type="hidden"  th:if="${mode == 'update'}" name="_method" value="put"/>
         <!--        HiddenHttpMethodFilter: This filter looks for a request parameter named _method.
                     If it finds it, it overrides the HTTP method of the request with the value of this parameter.
         -->
-        <div  class="row mb-3 ">
+        <div class="row mb-3 " th:unless="${mode == 'add'}">
             <div class="col-md-3 ">
                 <label class="form-label " >Your Id</label>
-                <input class="form-control" type="text" th:field="*{id}" aria-label="id" id="idInput"/>
-                <div   th:if="${#fields.hasErrors('id')}" >
+                <input class="form-control" type="text" th:field="*{id}" id="idInput" aria-label="id"/>
+                <div    th:if="${#fields.hasErrors('id')}" >
                     <p class="text-danger" th:errors="*{id}"></p>
                 </div>
             </div>
-
         </div>
 
         <div class="row mb-3 ">
             <div class="col-md-3">
                 <label class="form-label " >First Name </label>
                 <input class="form-control"  type="text" th:field="*{firstName}" aria-label="firstName"/>
-                <div   th:if="${#fields.hasErrors('firstName')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('firstName')}">
                     <p class="text-danger" th:errors="*{firstName}"></p>
                 </div>
             </div>
             <div class="col-md-3 ">
                 <label class="form-label ">Last Name  </label>
                 <input class="form-control" type="text" th:field="*{lastName}" aria-label="lastName"/>
-                <div   th:if="${#fields.hasErrors('lastName')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('lastName')}">
                     <p class="text-danger" th:errors="*{lastName}"></p>
                 </div>
             </div>
@@ -42,14 +41,14 @@
             <div class="col-md-3">
                 <label class="form-label " >Age </label>
                 <input class="form-control" type="text" th:field="*{age}" aria-label="age"/>
-                <div    th:if="${#fields.hasErrors('age')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('age')}">
                     <p class="text-danger" th:errors="*{age}"></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <label class="form-label " >Gender </label>
                 <input class="form-control" type="text" th:field="*{gender}" aria-label="gender"/>
-                <div   th:if="${#fields.hasErrors('gender')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('gender')}">
                     <p class="text-danger" th:errors="*{gender}"></p>
                 </div>
             </div>
@@ -59,14 +58,17 @@
             <div class="col-md-3">
                 <label class="form-label " >Email </label>
                 <input class="form-control " type="text" th:field="*{email}" aria-label="email"/>
-                <div    th:if="${#fields.hasErrors('email')}">
+                <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('email')}">
                     <p class="text-danger" th:errors="*{email}"></p>
+                </div>
+                <div   th:if="${errorExistEmail}">
+                    <p class="text-danger" th:text="${errorExistEmail}"> </p>
                 </div>
             </div>
             <div class="col-md-3">
                 <label class="form-label ">Phone </label>
                 <input class="form-control" type="text" th:field="*{phone}" aria-label="phone"/>
-                <div   th:if="${#fields.hasErrors('phone')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('phone')}">
                     <p class="text-danger" th:errors="*{phone}"></p>
                 </div>
             </div>
@@ -76,14 +78,14 @@
             <div class="col-md-3">
                 <label class="form-label " >Height </label>
                 <input class="form-control" type="text" th:field="*{height}" aria-label="height"/>
-                <div    th:if="${#fields.hasErrors('height')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('height')}">
                     <p class="text-danger" th:errors="*{height}"></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <label class="form-label " >Weight </label>
                 <input class="form-control" type="text" th:field="*{weight}" aria-label="weight"/>
-                <div   th:if="${#fields.hasErrors('weight')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('weight')}">
                     <p class="text-danger" th:errors="*{weight}"></p>
                 </div>
             </div>
@@ -92,7 +94,7 @@
             <div class="col-md-3">
                 <label class="form-label " >City </label>
                 <input class="form-control" type="text" th:field="*{city}" aria-label="city"/>
-                <div   th:if="${#fields.hasErrors('city')}">
+                <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('city')}">
                     <p class="text-danger" th:errors="*{city}"></p>
                 </div>
             </div>
@@ -101,7 +103,7 @@
             <div class="col-md-5">
                 <label class="form-label " >Address </label>
                 <textarea  class="form-control" th:field="*{address}" aria-label="address" rows="3"></textarea>
-                <div    th:if="${#fields.hasErrors('address')}">
+                <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('address')}">
                     <p class="text-danger" th:errors="*{address}"></p>
                 </div>
             </div>
@@ -110,7 +112,7 @@
             <div class="col-md-5">
                 <label class="form-label " >Medical History </label>
                 <textarea class="form-control" th:field="*{medicalHistory}" aria-label="medicalHistory" rows="3"></textarea>
-                <div    th:if="${#fields.hasErrors('medicalHistory')}">
+                <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('medicalHistory')}">
                     <p class="text-danger" th:errors="*{medicalHistory}"></p>
                 </div>
             </div>
@@ -119,28 +121,32 @@
             <div class="col-md-3">
                 <label class="form-label " >Emergency Contact RelationShip        </label>
                 <input class="form-control" type="text" th:field="*{emergencyContactRelationship}" aria-label="emergencyContactRelationship"/>
-                <div    th:if="${#fields.hasErrors('emergencyContactRelationship')}">
+                <div   th:unless="${mode == 'view'}" th:if="${#fields.hasErrors('emergencyContactRelationship')}">
                     <p class="text-danger" th:errors="*{emergencyContactRelationship}"></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <label class="form-label " >Emergency Contact Number </label>
                 <input class="form-control" type="text" th:field="*{emergencyContactNumber}" aria-label="emergencyContactNumber"/>
-                <div    th:if="${#fields.hasErrors('emergencyContactNumber')}">
+                <div  th:unless="${mode == 'view'}"  th:if="${#fields.hasErrors('emergencyContactNumber')}">
                     <p class="text-danger" th:errors="*{emergencyContactNumber}"></p>
                 </div>
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-md-3" th:unless="${mode == 'view'}" >
+        <div class="row mb-3" th:if="${mode == 'update'}" >
+            <div class="col-md-3"  >
                 <label class="form-label fw-bold">Update password here </label>
                 <input class="form-control" type="text" th:field="*{password}" aria-label="password"/>
                 <div   th:if="${#fields.hasErrors('password')}">
-                <p class="text-danger" th:errors="*{password}"></p>
+                    <p class="text-danger" th:errors="*{password}"></p>
                 </div> <br>
             </div>
         </div>
+
         <input th:unless="${mode == 'view'}" class="ml-1 btn btn-secondary" type="submit" th:value=" ${mode == 'add' ? 'Add' : 'Update'} + ' patient' ">
+        <br>
+
     </form>
-</div> <!-- For Fragment reuse code-->
+</div>
+

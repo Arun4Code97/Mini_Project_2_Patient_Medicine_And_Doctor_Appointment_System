@@ -1,8 +1,10 @@
 package com.healthcare.doctor_consultation_medicine.Controller;
 
-import com.healthcare.doctor_consultation_medicine.DTO.MedicineDto;
+import com.healthcare.doctor_consultation_medicine.DTO.DoctorDto;
 import com.healthcare.doctor_consultation_medicine.DTO.PatientDto;
-import com.healthcare.doctor_consultation_medicine.Service.Implementation.PatientServiceImpl;
+import com.healthcare.doctor_consultation_medicine.Others.CredentialDto;
+import com.healthcare.doctor_consultation_medicine.Service.DoctorService;
+import com.healthcare.doctor_consultation_medicine.Service.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -10,126 +12,167 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/patient")
+@RequestMapping("/hospital")
 public class PatientController {
-    private final PatientServiceImpl patientService;
-    @GetMapping(value = "/getAll" )
-    public String handlerMethodToGetAllPatient(Model model){
-        List<PatientDto> patientList = patientService.getAllPatient();
-        model.addAttribute("patientList",patientList);
-        return "patient/patientList";
-    }
-    @GetMapping("get/{id}")
-    public String handlerMethodForGetSinglePatient(@PathVariable Long id,Model model){
-        Optional<PatientDto> patient = patientService.getPatientById(id);
-        model.addAttribute("patient",new PatientDto());
+    private final PatientService patientService;
+    private final DoctorService doctorService;
 
-        patient.ifPresentOrElse(
-                patientDto  -> model.addAttribute("patient",patientDto),
-                ()          -> model.addAttribute("error","Patient ID "+ id + " does not exist")
-                        );
+    @GetMapping("/addPatient")
+    public String toHandleAddPatientRequest(Model model){
+        PatientDto patient = new PatientDto();
+        model.addAttribute("patient",patient);
+        model.addAttribute("mode","add");
+        model.addAttribute("showPatientForm","fragmentName");
+        return "patient/addPatient";
+    }
+    @PostMapping("/addPatient")
+    public String toHandleAddPatient(@Valid @ModelAttribute("patient") PatientDto patient,
+                                     BindingResult result, Model model){
+
+        model.addAttribute("mode","add");
+
+        if(result.hasErrors()){
+
+            model.addAttribute("showPatientForm","fragmentName");
+            return "patient/addPatient";}
+
+        //Handle Error if mail ID already exist
+        if( patientService.existByEmailId(patient.getEmail()) ){
+            model.addAttribute("showPatientForm","fragmentName");
+            model.addAttribute("errorExistEmail","Patient Email ID already exist");
+            return "patient/addPatient";
+        }
+
+        PatientDto savedPatient = patientService.addPatient(patient);
+
+        model.addAttribute("setPassword","fragmentName");
+
+        return "redirect:/hospital/addPatient/setPassword?savedPatientId=" + savedPatient.getId();
+    }
+
+    @GetMapping("/addPatient/setPassword")
+    public String toHandleSetPasswordRequest( @RequestParam("savedPatientId") Long patientId,
+                                                          Model model){
+        System.out.println("\n\n\n From get Mapping -> Request Param :\t " + patientId);
+        model.addAttribute("mode","add");
+        model.addAttribute("credentials",new CredentialDto());
+        model.addAttribute("setPassword", "fragmentName");
+        model.addAttribute("savedPatientId",patientId);
+
+        return "patient/addPatient";
+    }
+
+    @PostMapping("/addPatient/setPassword")
+    public String toHandleSetPassword(   @Valid @ModelAttribute("credentials") CredentialDto credentials,
+                                         BindingResult result,
+                                         @RequestParam("savedPatientId") Long patientId,
+                                         Model model){
+
+
+        model.addAttribute("mode","add");
+        model.addAttribute("savedPatientId",patientId);
+
+        if(result.hasErrors()){
+            model.addAttribute("setPassword","fragmentName");
+            return "patient/addPatient";
+            }
+
+        if( ! credentials.getPassword().equals( credentials.getConfirmPassword() ) ) {
+
+            model.addAttribute("setPassword","fragmentName");
+            model.addAttribute("error","Passwords are not matching");
+            return "patient/addPatient";
+        }
+
+        patientService.setPassword(patientId, credentials.getConfirmPassword());
+        // For JavaScript added notification and redirect to Home page
+        model.addAttribute("success", true);
+        return "patient/addPatient";
+
+    }
+    @GetMapping("/patientPortal/{id}")
+    public String toHandlePatientViewProfileRequest(@PathVariable("id") Long patientId,Model model){
+        PatientDto patient = patientService.getSinglePatientById(patientId);
+        model.addAttribute("patient",patient);
         model.addAttribute("mode","view");
-        return "patient/patientComponent";
-    }
-    @GetMapping("/add")
-    public String handlerMethodToShowForm(Model model)
-    {
-        PatientDto newPatient = new PatientDto();
-        model.addAttribute("patient",newPatient);
-        model.addAttribute("mode","add");
-        return "patient/patientComponent";
-    }
-    @PostMapping("/add")
-    public String handlerMethodForAddPatient(@Valid @ModelAttribute("patient") PatientDto patientDto, BindingResult result,Model model){
-
-        if(result.hasErrors()) {
-            return "patient/patientComponent";
-        }
-
-        if( patientService.existByEmailId(patientDto.getEmail()) ){
-            model.addAttribute("error","Patient Email ID "+ patientDto.getEmail() + " exist already");
-            return "patient/patientComponent";
-        }
-
-        PatientDto patient = patientService.addPatient(patientDto);
-
-//        model.addAttribute("savedPatient",patient);
-
-        model.addAttribute("mode","add");
-        return "HttpResponse";
-    }
-    @GetMapping("/update/{id}")
-    public String handlerMethodForUpdateForm (@PathVariable Long id,Model model)
-    {
-//        model.addAttribute("patient", new PatientDto());
-
-        Optional<PatientDto> retrivedPatient = patientService.getPatientById(id);
-
-        retrivedPatient.ifPresentOrElse(
-                patientDto -> model.addAttribute("patient", patientDto),
-                () -> model.addAttribute("error","Patient ID "+ id + " does not exist")
-                );
-
-//        System.out.println("\n\n\n\nFrom Update @GetMapping -> retrived patient details : " + model.getAttribute("patient")+"\n\n\n\n");
-
-        model.addAttribute("id",id);
-        model.addAttribute("mode","update");
-        model.addAttribute("fragmentName","showPatientForm");
+        model.addAttribute("showPatientForm","fragmentName");
         return "patient/patientPortal";
     }
-//    @PutMapping("/update/{id}")
-//    public String handlerMethodForUpdatePatient(@ModelAttribute("id") Long id, @Valid @ModelAttribute("patient") PatientDto patientDto,BindingResult result,Model model){
-//        System.out.println("\n\n\n\n from put-update"+ id);
-//        if(result.hasErrors()) {
-//            return "patient/patientComponent";
-//        }
-//       patientService.updatePatientById(id,patientDto);
-//
-//        if (updatedPatient == null)
-//            model.addAttribute("error", "Patient ID " + id + " does not exist");
-//
-////        System.out.println("\n\n\n\nFrom Update @PutMapping -> After update - The patient details : " + updatedPatient +"\n\n\n\n");
-//        model.addAttribute("updatedPatient",updatedPatient);
-//        model.addAttribute("mode","update");
-//
-//        return "HttpResponse";
-//    }
-    @GetMapping("/delete/{id}")
-    public String handlerMethodForDeleteRequest(@PathVariable Long id,Model model)
-    {
-    model.addAttribute("id",id);
-    return "patient/deletePatient";
-    }
-//    @DeleteMapping("/delete/{id}")
-//    public String handlerMethodForDeletePatient(@PathVariable Long id, Model model) {
-//        boolean isDeleted = patientService.deletePatientById(id);
-//        if (!isDeleted) {
-//            model.addAttribute("error", "Patient ID " + id + " does not exist");
-//        }
-//        model.addAttribute("mode", "delete");
-//        return "httpResponse"; // Render the response page
-//    }
-//---------------------------------------------------------------------------------
-    // View prescribed medicines for a patient
-//-------------------------------------------------------------------------------
-    @GetMapping("/{id}/medicines")
-    public String viewPatientMedicines(@PathVariable Long id, Model model) {
-        model.addAttribute("patient", new PatientDto());
-        List<MedicineDto> medicines = new ArrayList<>();
 
-        Optional<PatientDto> patient = patientService.getPatientById(id);
-        if(patient.isPresent()) {
-           medicines = patient.get().getMedicines(); // Get medicines from the patient
-        }
+    @GetMapping("/patientPortal/updateProfile/{id}")
+    public String toHandleUpdateProfileRequest(@PathVariable("id") Long patientId, Model model) {
+        PatientDto patient = patientService.getSinglePatientById(patientId);
         model.addAttribute("patient", patient);
-        model.addAttribute("medicines", medicines);
-        return "viewPatientMedicines"; // Thymeleaf template for viewing medicines
+        model.addAttribute("mode", "update");
+        model.addAttribute("showPatientForm", "fragmentName"); // Switch to update fragment
+        return "patient/patientPortal";
+    }
+
+    @PutMapping("/patientPortal/updateProfile/{id}")
+    public String toHandleUpdateProfile(@PathVariable("id") Long id,
+                                        @Valid @ModelAttribute("patient") PatientDto patientDto,
+                                        BindingResult result,Model model){
+
+        if(result.hasErrors()){
+            model.addAttribute("mode","update");
+            model.addAttribute("showPatientForm", "fragmentName");
+            return "patient/patientPortal";}
+
+        patientService.updatePatientById(id,patientDto);
+
+        model.addAttribute("mode","view");
+        return "redirect:/hospital/patientPortal/"+ id;
+    }
+
+    @GetMapping("/patientPortal/deletePatient/{id}")
+    public String toHandleDeletePatientRequest(@PathVariable("id") Long id,Model model){
+        model.addAttribute("mode","delete");
+        model.addAttribute("deletePatient", "fragmentName");
+        model.addAttribute("patient",patientService.getSinglePatientById(id));
+        return "patient/patientPortal";
+    }
+
+    @DeleteMapping("/patientPortal/deletePatient/{id}")
+    public String toHandleDeletePatient(@PathVariable("id") Long id){
+        patientService.deletePatientById(id);
+        return "redirect:/hospital";
+    }
+
+    @GetMapping("/patientPortal/{id}/medicines")
+    public String toShowMedicinesRequest(@PathVariable Long id ,Model model){
+        model.addAttribute("mode","medicineView");
+        model.addAttribute("medicineView", "fragmentName");
+        model.addAttribute("patient",patientService.getSinglePatientById(id));
+        return "patient/patientPortal";
+    }
+
+    @GetMapping("/patientPortal/{id}/showDoctorsBySpecialization")
+    public String toShowDoctorsBySpecialization(@PathVariable Long id , Model model){
+        List<DoctorDto> doctorList= doctorService.getAllDoctors();
+        if(doctorList.isEmpty())
+            model.addAttribute("error","Database is empty");
+
+        List<Map<String,Object>> doctorListWithConvertedImage = new ArrayList<>();
+        for(DoctorDto doctor : doctorList){
+            Map<String,Object> doctorData = new HashMap<>();
+            doctorData.put("doctor",doctor);
+            if (doctor.getImage() != null) {
+                // Convert the byte[] to a Base64 encoded string
+                String base64Image = Base64.getEncoder().encodeToString(doctor.getImage());
+                doctorData.put("base64Image", base64Image);
+            }
+            doctorListWithConvertedImage.add(doctorData);
+        }
+
+        model.addAttribute("doctorsData",doctorListWithConvertedImage);
+        model.addAttribute("mode","showDoctorsBySpecialization");
+        model.addAttribute("showDoctors", "fragmentName");
+        model.addAttribute("patient",patientService.getSinglePatientById(id));
+        return "patient/patientPortal";
     }
 
 }

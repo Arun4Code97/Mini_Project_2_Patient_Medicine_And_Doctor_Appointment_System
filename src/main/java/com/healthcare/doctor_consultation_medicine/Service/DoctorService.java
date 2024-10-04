@@ -13,14 +13,19 @@ public interface DoctorService {
 
     boolean isExistById(Long id);
 
-    DoctorDto getSingleDoctor(Long id);
+    DoctorDto getSingleDoctorById(Long id);
     List<DoctorDto> getAllDoctors();
 
 //    DoctorDto updateDoctorById(Long id, DoctorDto doctorDto);
+    public void deleteDoctorById(Long id);
 
     void deletePatientById(Long id);
 
     Optional<DoctorDto> findDoctorByEmailId(String email);
 
     List<DoctorDto> getDoctorsBySpecialization();
+
+    DoctorDto saveDoctor(DoctorDto doctor);
+
+    void setPassword(Long doctorId, String confirmPassword);
 }

@@ -16,4 +16,6 @@ public interface PatientService {
         public boolean existByEmailId(String email) ;
 
     Optional<PatientDto> findPatientByEmailId(String email);
+
+    void setPassword(Long patientId, String confirmPassword);
 }

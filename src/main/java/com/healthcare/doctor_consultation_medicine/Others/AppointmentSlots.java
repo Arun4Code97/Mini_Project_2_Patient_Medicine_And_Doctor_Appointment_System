@@ -1,4 +1,4 @@
-package com.healthcare.doctor_consultation_medicine.common;
+package com.healthcare.doctor_consultation_medicine.Others;
 
 import java.util.List;
 

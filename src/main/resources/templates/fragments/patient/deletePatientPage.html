@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="confirmSection">
-    <p class="text-start fs-5 mt-2"> Are you sure you want to delete this patient?</p>
+    <p class="text-start fs-5 mt-2"> Are you sure to delete your profile ?</p>
 
         <!-- Hidden form that will be submitted when user confirms deletion -->
         <form id="deleteForm" th:action="@{/hospital/patientPortal/deletePatient/{id}(id=${patient.id})}" method="post">
@@ -14,6 +14,4 @@
         <a class="btn btn-secondary"
                 th:href="@{/hospital/patientPortal/{id}(id=${patient.id})}"
                 >Cancel</a>
-
-
 </div>

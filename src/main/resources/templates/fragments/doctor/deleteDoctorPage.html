@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="content">
+    <p class="text-start fs-5 mt-2"> Are you sure to delete your profile ?</p>
+
+    <!-- Hidden form that will be submitted when user confirms deletion -->
+    <form id="deleteForm" th:action="@{/hospital/doctorPortal/deleteDoctor/{id}(id=${doctor.id})}" method="post">
+        <input type="hidden" name="_method" value="delete" />
+        <input type="submit" id="submitDelete" value="Delete Doctor" style="display:none;" />
+    </form>
+
+    <!-- Confirmation buttons -->
+    <button class="btn btn-danger mr-2" onclick="confirmDelete()">Yes, Delete</button>
+    <a class="btn btn-secondary"
+       th:href="@{/hospital/doctorPortal/{id}(id=${doctor.id})}"
+    >Cancel</a>
+</div>

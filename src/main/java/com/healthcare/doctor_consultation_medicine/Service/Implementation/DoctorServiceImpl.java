@@ -3,13 +3,17 @@ package com.healthcare.doctor_consultation_medicine.Service.Implementation;
 import com.healthcare.doctor_consultation_medicine.DTO.DoctorDto;
 import com.healthcare.doctor_consultation_medicine.Mapper.DoctorMapper;
 import com.healthcare.doctor_consultation_medicine.Model.Doctor;
+import com.healthcare.doctor_consultation_medicine.Repository.AppointmentRepository;
 import com.healthcare.doctor_consultation_medicine.Repository.DoctorRepository;
+import com.healthcare.doctor_consultation_medicine.Repository.MedicineRepository;
 import com.healthcare.doctor_consultation_medicine.Service.DoctorService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +21,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final MedicineRepository medicineRepository;
     @Override
     public DoctorDto saveDoctorWithImage(DoctorDto doctorDto, MultipartFile imageFile) throws IOException {
         Doctor doctor = DoctorMapper.mapToEntity(doctorDto);
-        if(!imageFile.isEmpty())
-            doctor.setImage(imageFile.getBytes());
+
+        if(imageFile != null && !imageFile.isEmpty()){
+            doctor.setImage(imageFile.getBytes());}
+
         return DoctorMapper.mapToDto(doctorRepository.save(doctor));
     }
     @Override
@@ -37,9 +45,9 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDto getSingleDoctor(Long id) {
+    public DoctorDto getSingleDoctorById(Long id) {
         Optional<Doctor> retrivedDoctor = doctorRepository.findById(id);
-        return DoctorMapper.mapToDto(retrivedDoctor.get());
+        return retrivedDoctor.map(DoctorMapper::mapToDto).orElse(null);
     }
 
     @Override
@@ -67,5 +75,29 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<DoctorDto> getDoctorsBySpecialization() {
         return null;
+    }
+
+    @Override
+    public DoctorDto saveDoctor(DoctorDto doctorDto) {
+        Doctor doctor = DoctorMapper.mapToEntity(doctorDto);
+        return DoctorMapper.mapToDto(doctorRepository.save(doctor));
+    }
+
+    @Override
+    public void setPassword(Long doctorId, String confirmPassword) {
+        doctorRepository.findById(doctorId).ifPresent(
+                doctor -> {
+                    doctor.setPassword(confirmPassword);
+                    doctorRepository.save(doctor);
+                } );
+    }
+
+    @Transactional
+    public void deleteDoctorById(Long id){
+        if(doctorRepository.existsById(id)){
+            appointmentRepository.deleteByPatientId(id);
+            medicineRepository.deleteByPatientId(id);
+            doctorRepository.deleteById(id);
+        }
     }
 }

@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Portal</title>
     <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/patientPortal.css}">
+    <link rel="stylesheet" th:href="@{/css/portalTemplate.css}">
     <link rel="stylesheet" th:href="@{/css/scheduleAppointment.css}">
+
 </head>
 
 <body>
@@ -41,7 +42,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" th:href="@{/hospital}">
+                        <a class="nav-link text-white" th:href="@{/hospital}" onclick="showLogoutNotification()">
                             Log out
                         </a>
                     </li>
@@ -53,43 +54,40 @@
         <!-- Main Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="pt-3 pb-2 mb-3 border-bottom">
-                <h2>Welcome to the Patient Portal !!</h2>
+                <h2 th:if="${mode} == 'view' " class="text-primary">Home Page with Patient View</h2>
                 <p>Mode is <span th:text="${mode}"></span></p>
-                <p>To get started, click on any of the links on the sidebar. By Default It shows basic patient details</p>
 
                 <div class="innerContainer" th:if="${showPatientForm}" >
-                        <h4 class="text-start">Patient Details</h4>
-                        <div  th:insert="~{fragments/showPatientForm :: patientForm}"></div>
+                    <h4 class="text-start"> <span th:if="${mode} == 'update' " >Update </span> Patient Details</h4>
+                        <div  th:insert="~{fragments/patient/showPatientForm :: patientForm}"></div>
                 </div>
                 <div class="innerContainer" th:if="${medicineView}" >
                     <h4 class="text-start">Prescribed Medicines</h4>
-                    <div  th:insert="~{fragments/medicineView :: medicines}"></div>
+                    <div  th:insert="~{fragments/patient/medicineView :: medicines}"></div>
                 </div>
 
                 <div class="innerContainer" th:if="${showDoctors}" >
                     <h4 class="text-start">Select Doctor</h4>
-                    <div  th:insert="~{fragments/showDoctors :: profileCards}"></div>
+                    <div  th:insert="~{fragments/patient/showDoctors :: profileCards}"></div>
                 </div>
 
                 <div class="innerContainer" th:if="${scheduleAppointment}" >
                     <h4 class="text-start">Book Appointment with Dr.<span th:text="${doctor.firstName + ' ' + doctor.firstName}"></span></h4>
-                    <div  th:insert="~{fragments/scheduleAppointment :: schedule}"></div>
+                    <div  th:insert="~{fragments/patient/scheduleAppointment :: schedule}"></div>
                 </div>
 
                 <div class="innerContainer" th:if="${scheduleAppointmentConfirmation}" >
                     <h4>Appointment Confirmation</h4>
-                    <div  th:insert="~{fragments/appointmentConfirmation :: conform}"></div>
+                    <div  th:insert="~{fragments/patient/appointmentConfirmation :: conform}"></div>
                 </div>
 
-                <div class="innerContainer" th:if="${updatePatientForm}" >
-                    <h4 class="text-start">Patient Details</h4>
-                    <div  th:insert="~{fragments/updatePatientForm :: patientForm}"></div>
-                </div>
 
                 <div class="innerContainer" th:if="${deletePatient}" >
                     <h4 class="text-start">Delete patient</h4>
-                    <div  th:insert="~{fragments/deletePatientPage :: confirmSection}"></div>
+                    <div  th:insert="~{fragments/patient/deletePatientPage :: confirmSection}"></div>
                 </div>
+
+
 
             </div>
         </main>
@@ -101,8 +99,8 @@
     </footer>
  </div>
 
-<script th:src="@{/js/patientPortal.js}"></script>
-<script th:src="@{/js/scheduleAppointment.js}"></script>
+<!-- <script th:src="@{/js/scheduleAppointment.js}"></script>-->
+ <script th:src="@{/js/patientPortal.js}"></script>
 
 </body>
 

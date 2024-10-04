@@ -1,7 +1,6 @@
 package com.healthcare.doctor_consultation_medicine.DTO;
 
 import com.healthcare.doctor_consultation_medicine.Model.Appointment;
-import com.healthcare.doctor_consultation_medicine.Model.Medicine;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -17,36 +16,46 @@ import java.util.List;
 @NoArgsConstructor
 public class DoctorDto {
     private String id;
-    @NotBlank(message = "First name should not be blank")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain 2 to 30 characters, including letters and special characters(, .'-)")
+
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain 2 to 30 characters(A-Za-z, .'-).")
+    @NotBlank(message = "First name should not be blank.")
     private String firstName;
-    @NotBlank(message = "Last name should not be blank")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain 2 to 30 characters, including letters and special characters(, .'-)")
+
+
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain 2 to 30 characters(A-Za-z, .'-).")
+    @NotBlank(message = "Last name should not be blank.")
     private String lastName;
-    @NotBlank(message = "Gender should not be blank")
-    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "1 to 15 alphabets characters only allowed")
 
     private String password;
 
+
+    @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "1 to 15 alphabets characters only allowed.")
+    @NotBlank(message = "Gender should not be blank.")
     private String gender;
-    @Email(message = "email ID should be valid ")
-    @NotBlank(message = "email ID should not be blank")
+
+    @Email(message = "email ID should be valid. ")
+    @NotBlank(message = "email ID should not be blank.")
     private String email;
 
-    @NotBlank(message = "Specialization should not be blank")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain up to 30 characters, including letters and special characters(, .'-)")
+
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain 2 to 30 characters(A-Za-z, .'-).")
+    @NotBlank(message = "Specialization should not be blank.")
     private String specialization;
 
-    @NotBlank(message = "Qualification should not be blank")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain up to 30 characters, including letters and special characters(, .'-)")
+
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain 2 to 30 characters(A-Za-z, .'-).")
+    @NotBlank(message = "Qualification should not be blank.")
     private String qualification;
 
-    @NotBlank(message = "Experience should not be blank")
-    @Pattern(regexp = "^[0-9]{1,2}$" , message ="Should be a 2 digit number between 0 and 9")
+
+    @Pattern(regexp = "^[0-9]{1,2}$" , message ="Should be a 2 digit number.")
+    @NotBlank(message = "Experience should not be blank.")
     private String experience;
-    @NotBlank(message = "Contact should not be blank")
-    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Should start with 6, 7, 8, or 9 and must contain exactly 10 digits.")
-    private String phoneNumber;
+
+
+    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Should start with above 5, and must contain exactly 10 digits.")
+    @NotBlank(message = "Contact should not be blank.")
+    private String phone;
 
     private byte[] image;
 
@@ -55,13 +64,13 @@ public class DoctorDto {
     @Override
     public String toString(){
         return "DoctorDto{" +
-        ", Id = " + id +
+        "Id = " + id +
         ", Name = " + firstName + " " + lastName +
         ", Gender = " + gender +
         ", Email = " + email +
         ", Specialization = " + specialization  +
         ", Qualification = " + qualification +
         ", Experience = " +experience +
-        ", Phone = " + phoneNumber + "}"   ;
+        ", Phone = " + phone + "}"   ;
     }
 }

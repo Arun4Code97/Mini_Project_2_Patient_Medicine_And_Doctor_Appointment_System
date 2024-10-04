@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Patient Page</title>
+    <title>Add Doctor</title>
     <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/portalTemplate.css}">
 
@@ -37,14 +37,13 @@
 </head>
 
 <body>
-
 <div class="wrapper">
     <!-- Sidebar and Content Wrapper -->
     <div class="content-wrapper">
         <!-- Sidebar -->
         <nav class="col-md-3 col-lg-2 d-md-block bg-secondary text-white sidebar sidebar-sticky">
             <div class="position-sticky pt-3">
-                <h3 class="text-white ">Add Patient Portal</h3>
+                <h3 class="text-white ">Add Doctor Portal</h3>
                 <ul class="nav flex-column">
 
                     <li class="nav-item">
@@ -52,7 +51,6 @@
                             Cancel
                         </a>
                     </li>
-
                 </ul>
             </div>
         </nav>
@@ -60,24 +58,23 @@
         <!-- Main Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="pt-3 pb-2 mb-3 border-bottom">
-                <h2>Add Patient</h2>
-
-                <div class="innerContainer" th:if="${showPatientForm}" >
-                    <h4 class="text-start">Patient Details</h4>
-                    <div  th:insert="~{fragments/patient/showPatientForm :: patientForm}"></div>
+                <h2>Add Doctor</h2>
+                <div class="innerContainer" th:if="${showDoctorForm}" >
+                    <h4 class="text-start">Doctor Details</h4>
+                    <div  th:insert="~{fragments/doctor/showDoctorForm :: content}"></div>
                 </div>
+
                 <div class="innerContainer" th:if="${setPassword}" >
                     <h4 class="text-start">Set Password</h4>
-                    <div  th:insert="~{fragments/patient/setPasswordForm :: password}"></div>
-
+                    <div  th:insert="~{fragments/doctor/setPasswordForm :: content}"></div>
                 </div>
+
                 <!-- Check if the form was successfully submitted -->
                 <div  th:if="${success}">
 <!--                    Thymeleaf will insert the patient ID here '[(${patientId})]'-->
-
-                    <input type="hidden" id="hiddenPatientId" th:value="${savedPatientId}" />
+                    <input type="hidden" id="hiddenDoctorId" th:value="${savedDoctorId}" />
                     <div id="notificationBox" class="alert alert-success">
-                        <strong>Success!</strong> Your details are registered. Your patient ID is: <span id="patientIdDisplay"></span>. Redirecting to your patient portal...
+                        <strong>Success!</strong> Your details are registered. Your doctor ID is: <span id="doctorIdDisplay"></span>. Redirecting to your doctor portal...
                     </div>
                 </div>
 
@@ -92,26 +89,26 @@
 </div>
 <script>
     // Function to show the success notification and redirect
-    function showSuccessAndRedirect(patientId) {
-        // Set the patient ID in the notification box
-        document.getElementById('patientIdDisplay').textContent = patientId;
+    function showSuccessAndRedirect(doctorId) {
+        // Set the doctor ID in the notification box
+        document.getElementById('doctorIdDisplay').textContent = doctorId;
 
         // Show the notification box
         document.getElementById('notificationBox').style.display = 'block';
 
         // Wait 5 seconds and then redirect
         setTimeout(function () {
-            window.location.href = "/hospital/patientPortal/" + patientId;
+            window.location.href = "/hospital/doctorPortal/" + doctorId;
         }, 5000);  // 5000 milliseconds = 5 seconds
     }
 
     // Wait for the DOM to load
     document.addEventListener("DOMContentLoaded", function() {
-        let patientId = document.getElementById('hiddenPatientId').value;
+        let doctorId = document.getElementById('hiddenDoctorId').value;
 
-        // Check if the patient ID exists and call the function
-        if (patientId) {
-            showSuccessAndRedirect(patientId);
+        // Check if the doctor ID exists and call the function
+        if (doctorId) {
+            showSuccessAndRedirect(doctorId);
         }
     });
 </script>

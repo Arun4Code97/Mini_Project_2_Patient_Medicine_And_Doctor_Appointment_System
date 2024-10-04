@@ -7,8 +7,20 @@ import java.util.Optional;
 
 public class PatientMapper {
     public static Patient toMapPatientEntity(PatientDto patientDto){
+        Long id;
+        if (patientDto.getId() != null && !patientDto.getId().isEmpty()) {
+            try {
+                id= Long.parseLong(patientDto.getId());
+            } catch (NumberFormatException e) {
+                // Handle invalid id format
+                id=null;
+            }
+        } else {
+            // Set to null for new records
+            id=null;
+        }
         return new Patient(
-              Long.parseLong(patientDto.getId()),
+              id,
               patientDto.getFirstName(),
               patientDto.getLastName(),
               patientDto.getPassword(),
