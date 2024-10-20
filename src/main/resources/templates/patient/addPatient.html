@@ -7,33 +7,7 @@
     <title>Add Patient Page</title>
     <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/portalTemplate.css}">
-
-    <style>
-        .alert {
-            padding: 15px;
-            border-radius: 5px;
-            color: white;
-            text-align: center;
-        }
-        .alert-success {
-            background-color: gray;
-            border: 1px solid black;
-        }
-            /* Center the notification box */
-        #notificationBox {
-        display: none; /* Hidden by default */
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); /* Centering horizontally and vertically */
-        width: 80%; /* Optional: you can adjust the width */
-        height: 100px;
-        max-width: 600px; /* Maximum width for the box */
-        z-index: 9999;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds shadow for better visibility */
-    }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/addPatient.css}">
 </head>
 
 <body>
@@ -73,8 +47,6 @@
                 </div>
                 <!-- Check if the form was successfully submitted -->
                 <div  th:if="${success}">
-<!--                    Thymeleaf will insert the patient ID here '[(${patientId})]'-->
-
                     <input type="hidden" id="hiddenPatientId" th:value="${savedPatientId}" />
                     <div id="notificationBox" class="alert alert-success">
                         <strong>Success!</strong> Your details are registered. Your patient ID is: <span id="patientIdDisplay"></span>. Redirecting to your patient portal...
@@ -90,31 +62,7 @@
         <div th:replace="~{common/footer :: footer}"></div>
     </footer>
 </div>
-<script>
-    // Function to show the success notification and redirect
-    function showSuccessAndRedirect(patientId) {
-        // Set the patient ID in the notification box
-        document.getElementById('patientIdDisplay').textContent = patientId;
-
-        // Show the notification box
-        document.getElementById('notificationBox').style.display = 'block';
-
-        // Wait 5 seconds and then redirect
-        setTimeout(function () {
-            window.location.href = "/hospital/patientPortal/" + patientId;
-        }, 5000);  // 5000 milliseconds = 5 seconds
-    }
-
-    // Wait for the DOM to load
-    document.addEventListener("DOMContentLoaded", function() {
-        let patientId = document.getElementById('hiddenPatientId').value;
-
-        // Check if the patient ID exists and call the function
-        if (patientId) {
-            showSuccessAndRedirect(patientId);
-        }
-    });
-</script>
+<script th:src="@{/js/addPatient.js}"></script>
 </body>
 
 </html>

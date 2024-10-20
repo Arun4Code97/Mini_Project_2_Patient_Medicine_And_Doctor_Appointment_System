@@ -15,7 +15,7 @@
             <div class = "buttons " th:each="slot : ${morningSlots}">
                 <button   th:class="${#lists.contains(appointments, slot) ? 'booked' : 'available'} "
                           th:text="${slot}"
-                          th:onclick="clickBookButton(this,'[(${slot})]')"> <!-- Use [[ ]] instead of ${ } for inline Thymeleaf expressions -->
+                          th:onclick="clickBookButton(this,'[(${slot})]')">
                 </button>
             </div>
         </div>

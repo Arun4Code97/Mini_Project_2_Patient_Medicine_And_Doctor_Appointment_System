@@ -4,8 +4,6 @@ import com.healthcare.doctor_consultation_medicine.DTO.DoctorDto;
 import com.healthcare.doctor_consultation_medicine.DTO.MedicineDto;
 import com.healthcare.doctor_consultation_medicine.DTO.PatientDto;
 import com.healthcare.doctor_consultation_medicine.Model.Appointment;
-import com.healthcare.doctor_consultation_medicine.Model.Doctor;
-import com.healthcare.doctor_consultation_medicine.Repository.DoctorRepository;
 import com.healthcare.doctor_consultation_medicine.Service.AppointmentService;
 import com.healthcare.doctor_consultation_medicine.Service.DoctorService;
 import com.healthcare.doctor_consultation_medicine.Service.MedicineService;
@@ -15,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -63,8 +58,8 @@ public class AppointmentController {
         model.addAttribute("morningSlots", AppointmentSlots.morningSlots);
         model.addAttribute("eveningSlots", AppointmentSlots.eveningSlots);
         model.addAttribute("scheduleAppointment","fragmentName");
+
         return "patient/patientPortal";
-//        return "appointment/scheduleAppointment";
     }
 
    @GetMapping("/book")
@@ -80,13 +75,10 @@ public class AppointmentController {
 
         model.addAttribute("appointment",appointment);
         model.addAttribute("patient", patientService.getSinglePatientById(patientId));
-        model.addAttribute("doctor",appointment.getDoctor());
         model.addAttribute("scheduleAppointmentConfirmation","fragmentName");
 
         return "patient/patientPortal";
-        //        return "appointment/confirmationPage";
    }
-    // Here doctor can click on show patient records Button only on already booked slots
     @GetMapping("/scheduled/{doctorId}")
     public String showFormForBookedAppointmentSlotsToDoctor(@PathVariable("doctorId") Long doctorId,
                                                             @RequestParam(value = "date",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -99,25 +91,17 @@ public class AppointmentController {
         List<Appointment> bookedAppointmentList = appointmentService.collectBookedSlots(doctorId,date);
 
         DoctorDto doctor = doctorService.getSingleDoctorById(doctorId);
-
-        model.addAttribute("doctor",doctor );
-        model.addAttribute("doctorBase64Image", Base64.getEncoder().encodeToString(doctor.getImage()));
-        model.addAttribute("date", date);
-
-
-        model.addAttribute("morningSlots", AppointmentSlots.morningSlots);
-        model.addAttribute("eveningSlots", AppointmentSlots.eveningSlots);
-
         // To check appointment formatted time
         List<String> formattedBookedAppointmentsTime = bookedAppointmentList.stream()
                 .map(appointment -> appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm")))
                 .collect(Collectors.toList());
-
+        model.addAttribute("doctor",doctor );
+        model.addAttribute("doctorBase64Image", Base64.getEncoder().encodeToString(doctor.getImage()));
+        model.addAttribute("date", date);
+        model.addAttribute("morningSlots", AppointmentSlots.morningSlots);
+        model.addAttribute("eveningSlots", AppointmentSlots.eveningSlots);
         model.addAttribute("appointments",formattedBookedAppointmentsTime);
-
-//        model.addAttribute("doctor",appointment.getDoctor());
         model.addAttribute("showBookedAppointments","fragmentName");
-
         return "doctor/doctorPortal";
     }
     @GetMapping("/goToConsultationRoom")
@@ -125,66 +109,54 @@ public class AppointmentController {
                                                                         @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
                                                                         @RequestParam(name="time") String timeStr,
                                                    Model model) {
-        System.out.println("Before Formatting time as String : \t" + timeStr);
         // Manually parse the time string into LocalTime
         LocalTime time = LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm"));
-        System.out.println("After Formatting time as LocalTime : \t" + timeStr);
+//        System.out.println("After Formatting time as LocalTime : \t" + timeStr);
         PatientDto patient =appointmentService.fetchPatientRecord(doctorId,date,time);
+        Appointment appointment = appointmentService.fetchAppointment(doctorId,date,time);
 
-        model.addAttribute("mode","view");
+
         List<MedicineDto> medicineList = new ArrayList<>();
-
-//        System.out.println("Before - Retrieved Medicine List: " + 0);
-
         medicineList = medicineService.getAllMedicineByPatientId(Long.parseLong(patient.getId()));
 
-//       System.out.println("\n\nAfter fetching medicines from medicineRepo using query : \n\n" + medicineList.get(1).toString());
-//        System.out.println("After - Retrieved Medicine properly : \t" + medicineList.size());
-//        patient.setMedicines(null);
         patient.setMedicines(medicineList);
 
-        for(MedicineDto item:medicineList){
-            System.out.println(item);
-        }
-//        System.out.println("\n\n\nDisplay Details with list member field :\t"+patient.getMedicines());
+        model.addAttribute("mode","view");
         model.addAttribute("patient",patient);
+        model.addAttribute("doctor",doctorService.getSingleDoctorById(doctorId));
         model.addAttribute("doctorId",doctorId);
+        model.addAttribute("medicine",new MedicineDto());
+        model.addAttribute("medicineList",medicineList);
+        if(medicineList.isEmpty())
+            model.addAttribute("error","No medications prescribed by other doctors");
+        model.addAttribute("appointmentId",appointment.getId());
+        model.addAttribute("advice",appointment.getDoctorAdvice());
+        model.addAttribute("showPatientByAppointmentTime","fragmentName");
+        return "doctor/doctorPortal";
+    }
+    @PostMapping("/saveAdviceOnly")
+    public String saveDoctorAdviceOnly(
+            @RequestParam("advice") String advice,
+            @RequestParam("appointmentId") Long appointmentId,Model model) {
 
-        return "patient/patientComponent";
+        // Save the doctor's advice to the appointment entity
+        Appointment appointment = appointmentService.findById(appointmentId);
+        appointment.setDoctorAdvice(advice);
+
+        appointmentService.addAppointment(appointment);
+        List<MedicineDto> medicineList = new ArrayList<>();
+        medicineList = medicineService.getAllMedicineByPatientId(appointment.getPatient().getId());
+
+        model.addAttribute("patient",appointment.getPatient());
+        model.addAttribute("doctor",appointment.getDoctor());
+        model.addAttribute("doctorId",appointment.getDoctor().getId());
+        model.addAttribute("advice",appointment.getDoctorAdvice());
+        model.addAttribute("appointmentId",appointment.getId());
+        model.addAttribute("medicineList",medicineList);
+        model.addAttribute("medicine",new MedicineDto());
+        model.addAttribute("mode","view");
+        model.addAttribute("showPatientByAppointmentTime","fragmentName");
+
+        return "doctor/doctorPortal";
     }
 }
-//@GetMapping("/schedule/{doctorId}/{patientId}")
-//    public String showFormForAvailableAppointmentSlots(@PathVariable("doctorId") Long doctorId,
-//                                                       @PathVariable("patientId") Long patientId,
-//                                                       @RequestParam(value = "date",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-//                                                       Model model){
-//        if (date == null) {
-//            date = LocalDate.now();
-//        }
-//        List<Appointment> appointmentList = appointmentService.collectBookedSlots(doctorId,date);
-////        System.out.println("\n\nAppointment List count : \t" + appointmentList.size());
-////        for(Appointment appointment:appointmentList){
-////            System.out.println("\n\n\n\appointment : \t\t\t"+ appointment.getId());
-////        }
-//        Doctor doctor = doctorService.findById(doctorId).get();
-//        model.addAttribute("doctor",doctor );
-//        model.addAttribute("doctorBase64Image", Base64.getEncoder().encodeToString(doctor.getImage()));
-//        model.addAttribute("patient", patientService.getPatientById(patientId).get());
-//        model.addAttribute("date", date);
-//
-//        List<String> morningSlots = List.of("10:00","10:15","10:30","10:45","11:00");
-//        List<String> eveningSlots = List.of("06:00","06:15","06:30","06:45",
-//                "07:00","07:15","07:30","07:45","08:00");
-//
-//        model.addAttribute("morningSlots",morningSlots);
-//        model.addAttribute("eveningSlots",eveningSlots);
-//
-//        List<String> formattedAppointments = appointmentList.stream()
-//                .map(appointment -> appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm")))
-//                .collect(Collectors.toList());
-//
-//        model.addAttribute("appointments",formattedAppointments);
-////        model.addAttribute("appointments",appointmentList.stream().map(appointment -> appointment.getAppointmentTime().toString()).toList());
-//
-//        return "appointment/scheduleAppointment";
-//    }

@@ -17,6 +17,7 @@ public class DoctorMapper {
             // Set to null for new records
             id=null;
         }
+
         return new Doctor(
                 id,
                 doctorDto.getFirstName(),

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class DoctorDto {
     private String id;
 
@@ -21,13 +23,11 @@ public class DoctorDto {
     @NotBlank(message = "First name should not be blank.")
     private String firstName;
 
-
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z .,'-]{1,29}$", message = "Should start with a letter and contain 2 to 30 characters(A-Za-z, .'-).")
     @NotBlank(message = "Last name should not be blank.")
     private String lastName;
 
     private String password;
-
 
     @Pattern(regexp = "^[a-zA-Z]{1,15}$", message = "1 to 15 alphabets characters only allowed.")
     @NotBlank(message = "Gender should not be blank.")
@@ -56,10 +56,13 @@ public class DoctorDto {
     @Pattern(regexp = "^[6-9]\\d{9}$", message = "Should start with above 5, and must contain exactly 10 digits.")
     @NotBlank(message = "Contact should not be blank.")
     private String phone;
+    @Builder.Default
+    private byte[] image = null;
 
-    private byte[] image;
-
+    @Builder.Default
     private List<MedicineDto> medicines = new ArrayList<>();
+
+    @Builder.Default
     private List<Appointment> appointments = new ArrayList<>();
     @Override
     public String toString(){

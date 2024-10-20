@@ -69,6 +69,7 @@
                 <div class="innerContainer" th:if="${showDoctors}" >
                     <h4 class="text-start">Select Doctor</h4>
                     <div  th:insert="~{fragments/patient/showDoctors :: profileCards}"></div>
+                    <p class="text-danger" th:if="${error}" th:text="${error}"> Doctor database is empty</p>
                 </div>
 
                 <div class="innerContainer" th:if="${scheduleAppointment}" >
@@ -98,8 +99,6 @@
         <div th:replace="~{common/footer :: footer}"></div>
     </footer>
  </div>
-
-<!-- <script th:src="@{/js/scheduleAppointment.js}"></script>-->
  <script th:src="@{/js/patientPortal.js}"></script>
 
 </body>

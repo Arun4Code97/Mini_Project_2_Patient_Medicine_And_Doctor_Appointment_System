@@ -8,10 +8,10 @@ import com.healthcare.doctor_consultation_medicine.Repository.MedicineRepository
 import com.healthcare.doctor_consultation_medicine.Repository.PatientRepository;
 import com.healthcare.doctor_consultation_medicine.Service.MedicineService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,61 +19,43 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MedicineServiceImpl implements MedicineService {
     private final MedicineRepository medicineRepository;
-
-@Autowired
-DoctorRepository doctorRepository;
-@Autowired
-    PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
     @Override
-    public boolean isExistById(Long id) {
-        return medicineRepository.existsById(id);
+    public MedicineDto addMedicine(Long doctorId, Long patientId, MedicineDto medicineDto) {
+
+        medicineDto.setDoctor(doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new NoSuchElementException("Doctor id " + doctorId +" not found")));
+        medicineDto.setPatient(patientRepository.findById(patientId)
+                .orElseThrow(() -> new NoSuchElementException("Patient id " + patientId + " not found")));
+        medicineDto.setId(null);
+        Medicine savedMedicine = medicineRepository.save(MedicineMapper.toMapEntity(medicineDto));
+        return MedicineMapper.toMapDto(savedMedicine);
     }
-
     @Override
-    public MedicineDto saveMedicine(MedicineDto medicineDto) {
-        Medicine medicine = MedicineMapper.toMapEntity(medicineDto);
-        return MedicineMapper.toMapDto(medicineRepository.save(medicine));
-    }
-
-    @Override
-    public List<MedicineDto> getAllMedicine() {
-        List<Medicine> medicineList = medicineRepository.findAll();
-        return medicineList.stream().map(MedicineMapper::toMapDto).toList();
+    public MedicineDto getSingleMedicineById(Long id) {
+        Optional<Medicine> retrievedMedicine = medicineRepository.findById(id);
+        return retrievedMedicine.map(MedicineMapper::toMapDto).orElse(null);
     }
     @Override
     public List<MedicineDto> getAllMedicineByPatientId(Long patientId){
         List<Medicine> medicineList = medicineRepository.findAllByPatientId(patientId);
         return medicineList.stream().map(MedicineMapper::toMapDto).collect(Collectors.toList());
     }
-
-    @Override
-    public MedicineDto getSingleMedicineById(Long id) {
-        Optional<Medicine> retrievedMedicine = medicineRepository.findById(id);
-        return MedicineMapper.toMapDto(retrievedMedicine.get());
-    }
-
-    @Override
-    public void deleteMedicineById(Long id) {
-    medicineRepository.deleteById(id);
-    }
-
-    @Override
-    public void addMedicine(Long doctorId,Long patientId, MedicineDto medicine) {
-
-        medicine.setDoctor(doctorRepository.findById(doctorId).get());
-        medicine.setPatient(patientRepository.findById(patientId).get());
-        medicine.setId(null);
-        Medicine savedMedicine = medicineRepository.save(MedicineMapper.toMapEntity(medicine));
-//        System.out.println("\n\n\nSavedMedicineNameInDatabase is :\t" + savedMedicine.getName());
-    }
-
     @Override
     public void updateMedicine(Long medicineId, MedicineDto updatedMedicine) {
-        Medicine medicine = medicineRepository.findById(medicineId).get();
+        Medicine medicine = medicineRepository.findById(medicineId)
+                .orElseThrow(() -> new NoSuchElementException("Medicine with id " + medicineId + " not found"));
         // Update medicine details
+        medicine.setId(medicineId);
         medicine.setName(updatedMedicine.getName());
         medicine.setDosage(updatedMedicine.getDosage());
         medicine.setDuration(updatedMedicine.getDuration());
         medicineRepository.save(medicine);
+    }
+    @Override
+    public void deleteMedicineById(Long id) {
+        if(medicineRepository.existsById(id))
+            medicineRepository.deleteById(id);
     }
 }

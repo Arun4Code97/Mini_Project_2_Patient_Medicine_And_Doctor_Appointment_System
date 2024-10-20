@@ -10,7 +10,7 @@
             <td>Duration</td>
             <td>Prescribed by Doctor</td>
             <td>Doctor Specialization</td>
-<!--            <td th:unless="${mode == 'medicineView'}">Actions</td>-->
+
         </tr>
         </thead>
         <tbody>
@@ -19,18 +19,8 @@
             <td th:text="${medicine.name}" >Medicine Name</td>
             <td th:text="${medicine.dosage}" >Dosage</td>
             <td th:text="${medicine.duration}" >Duration</td>
-            <td th:text="${medicine.doctor.firstName + ' ' + medicine.doctor.firstName}" >Duration</td>
-            <td th:text="${medicine.doctor.Specialization}" >Duration</td>
-<!--            <td th:unless="${mode == 'medicineView'}">-->
-<!--                <a class="btn btn-primary mr-2" th:href="@{/doctor/{doctorId}/updateMedicine/{medicineId}(doctorId=${doctorId},medicineId=${medicine.id})}" role="button">Update</a>-->
-
-<!--                <a class ="btn btn-danger" role="button" th:href="@{/doctor/{doctorId}/deleteMedicine/{medicineId}(doctorId=${doctorId},medicineId=${medicine.id})}" >Delete</a>-->
-
-<!--                &lt;!&ndash;                        <form th:action="@{/doctor/{doctorId}/deleteMedicine/{medicineId}(doctorId=${doctorId},medicineId=${medicine.id}) }" method="post">&ndash;&gt;-->
-<!--                &lt;!&ndash;                            <input type="hidden" name="_method" value="delete" />&ndash;&gt;-->
-<!--                &lt;!&ndash;                            <input type="submit" id="submitDelete" value="Delete medicine" style="display:none;" />&ndash;&gt;-->
-<!--                &lt;!&ndash;                        </form>&ndash;&gt;-->
-<!--            </td>-->
+            <td th:text="${medicine.doctor.firstName + ' ' + medicine.doctor.firstName}" >Prescribed by Doctor</td>
+            <td th:text="${medicine.doctor.Specialization}" >Doctor Specialization</td>
 
         </tr>
         </tbody>

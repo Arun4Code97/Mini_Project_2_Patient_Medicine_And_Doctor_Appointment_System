@@ -1,7 +1,6 @@
 package com.healthcare.doctor_consultation_medicine.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -12,14 +11,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "medicines") // Exclude medicines to prevent circular reference
-
+@Builder
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String firstName;
 
+    @Column(nullable = false)
     private String lastName;
 
     private String password;
@@ -27,6 +28,7 @@ public class Patient {
     private Integer age;
     private String gender;
 
+    @Column(unique = true,nullable = false)
     private String email;
 
     private Long phone;
@@ -38,6 +40,7 @@ public class Patient {
     private String medicalHistory;
 
     // One patient can have multiple prescribed medicines
+    @Builder.Default
     @OneToMany(mappedBy = "patient")
     private List<Medicine> medicines = new ArrayList<>();
 

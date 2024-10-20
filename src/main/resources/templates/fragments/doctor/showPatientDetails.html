@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="content">
+
+    <div class="border border-secondary  mb-2 border-opacity-75 p-4">
+        <form class="form-inline" th:object="${patient}" method="get" id="patientForm">
+            <!-- Your form fields go here -->
+            <h5 class='text-start mb-2'>Patient Details</h5>
+            <div class="row mb-3 " >
+                <div class="col-md-3 ">
+                    <label class="form-label " >Patient Id</label>
+                    <input class="form-control" type="text" th:field="*{id}" id="idInput" aria-label="id" disabled/>
+                </div>
+            </div>
+
+            <div class="row mb-3 ">
+                <div class="col-md-3">
+                    <label class="form-label " >First Name </label>
+                    <input class="form-control "  type="text" th:field="*{firstName}" aria-label="firstName" disabled/>
+                </div>
+                <div class="col-md-3 ">
+                    <label class="form-label ">Last Name  </label>
+                    <input class="form-control " type="text" th:field="*{lastName}" aria-label="lastName" disabled/>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label " >Age </label>
+                    <input class="form-control " type="text" th:field="*{age}" aria-label="age" disabled/>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label " >Gender </label>
+                    <input class="form-control" type="text" th:field="*{gender}" aria-label="gender" disabled/>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label " >Height </label>
+                    <input class="form-control " type="text" th:field="*{height}" aria-label="height" disabled/>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label " >Weight </label>
+                    <input class="form-control" type="text" th:field="*{weight}" aria-label="weight" disabled/>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label " >Email </label>
+                    <input class="form-control" type="text" th:field="*{email}" aria-label="email" disabled/>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label ">Phone </label>
+                    <input class="form-control" type="text" th:field="*{phone}" aria-label="phone" disabled/>
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-md-5">
+                    <label class="form-label " >Medical History </label>
+                    <textarea class="form-control " th:field="*{medicalHistory}" aria-label="medicalHistory" rows="3" disabled></textarea>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+

@@ -4,7 +4,6 @@
 <div th:fragment="profileCards">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="eachData : ${doctorsData}">
-<!--            /schedule/{doctorId}/{patientId}-->
             <a class="text-decoration-none card-link" th:href="@{/appointment/schedule/{doctorId}/{patientId}
                                                                 (doctorId=${eachData.doctor.id},
                                                                   patientId=${patient.id}) }" >

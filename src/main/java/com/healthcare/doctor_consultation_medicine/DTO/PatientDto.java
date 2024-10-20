@@ -1,12 +1,7 @@
 package com.healthcare.doctor_consultation_medicine.DTO;
 
-
-import com.healthcare.doctor_consultation_medicine.Model.Medicine;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "medicines")
+@Builder
 public class PatientDto {
 
     private String id;
@@ -65,6 +61,7 @@ public class PatientDto {
     @Pattern(regexp = "^[A-Za-z0-9\\-.,:/()#& ]{1,1024}$", message = "Allowed characters (A-Z,a-z,0-9) , (-, ./:()#&) and up to 256 characters.")
     private String medicalHistory;
 
+    @Builder.Default
     private List<MedicineDto> medicines = new ArrayList<>();
 
     @NotBlank(message = "Field should not be blank")

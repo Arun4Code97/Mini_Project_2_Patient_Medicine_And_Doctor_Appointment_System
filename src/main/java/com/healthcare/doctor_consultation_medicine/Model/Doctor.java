@@ -1,10 +1,7 @@
 package com.healthcare.doctor_consultation_medicine.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,31 +10,38 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString(exclude = {"image","medicines","appointments"}) // Exclude medicines to prevent circular reference
+@ToString(exclude = {"image","medicines","appointments"}) // Excluded to prevent circular reference
+@Builder
 public class Doctor {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long id;
+@Column(nullable = false)
 private String firstName;
+@Column(nullable = false)
 private String lastName;
 private String password;
 private String gender;
+
+@Column(unique = true,nullable = false)
 private String email;
+
 private String specialization;
-//Can add doctor Speakable languages
-//Doctor details or achievement as notes here
 private String qualification;
 private Integer experience;
 private Long phoneNumber;
 
+@Builder.Default
 @Lob
 @Column(name = "image" ,columnDefinition = "MEDIUMBLOB")
-private byte[] image;
+private byte[] image = null;
 
 // One doctor can prescribe multiple medicines
+@Builder.Default
 @OneToMany(mappedBy = "doctor")
-private List<Medicine> medicines = new ArrayList<>();
+private List<Medicine> medicines = null;
 
+@Builder.Default
 @OneToMany(mappedBy = "doctor")
-private List<Appointment> appointments = new ArrayList<>();
+private List<Appointment> appointments = null;
 }

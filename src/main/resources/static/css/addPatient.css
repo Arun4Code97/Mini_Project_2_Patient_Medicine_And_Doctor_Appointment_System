@@ -1,0 +1,24 @@
+ .alert {
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+        }
+.alert-success {
+            background-color: gray;
+            border: 1px solid black;
+        }
+            /* Center the notification box */
+#notificationBox {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centering horizontally and vertically */
+        width: 80%; /* Optional: you can adjust the width */
+        height: 100px;
+        max-width: 600px; /* Maximum width for the box */
+        z-index: 9999;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds shadow for better visibility */
+    }

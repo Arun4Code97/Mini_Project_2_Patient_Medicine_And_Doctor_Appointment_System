@@ -29,3 +29,20 @@
         border : 2px solid black;
         margin:5px 20px;
         }
+.disableInput{
+        background-color: #D3D3D3;  /* Default background for available slots */
+        color: black;                  /* Default text color */
+        pointer-events: none; /* Disable click */
+        }
+#addMedicineForm input,#updateMedicineForm input{
+    border: 2px solid gray;
+    padding: 5px;
+    margin-right:3px;
+    margin-bottom:3px;
+    border-radius: 4px;
+    }
+#doctorAdviceForm textarea{
+    border: 2px solid gray;
+    padding: 6px;
+    border-radius: 4px;
+    }

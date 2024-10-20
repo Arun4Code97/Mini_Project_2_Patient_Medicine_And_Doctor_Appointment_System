@@ -12,4 +12,10 @@ public interface AppointmentService {
     public Appointment bookAppointment(Long doctorId, Long patientId, LocalDate appointmentDate, LocalTime appointmentTime);
 
     PatientDto fetchPatientRecord(Long doctorId, LocalDate date, LocalTime time);
+
+    Appointment findById(Long appointmentId);
+
+    void addAppointment(Appointment appointment);
+
+    Appointment fetchAppointment(Long doctorId, LocalDate date, LocalTime time);
 }

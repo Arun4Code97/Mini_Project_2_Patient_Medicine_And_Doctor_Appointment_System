@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface MedicineRepository extends JpaRepository<Medicine,Long> {
     List<Medicine> findAllByPatientId(Long patientId);
-
     void deleteByPatientId(Long id);
+    void deleteByDoctorId(Long id);
 }

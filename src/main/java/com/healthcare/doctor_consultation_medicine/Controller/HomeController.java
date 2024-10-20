@@ -28,41 +28,52 @@ public class HomeController {
         return "common/homePage";
     }
     @PostMapping("/login")
-    public String toHandleLoginRequest(@Valid @ModelAttribute("userData")UserLoginDTO userData, BindingResult result,Model model){
-        if(result.hasErrors())
+    public String toHandleLoginRequest(@Valid @ModelAttribute("userData") UserLoginDTO userData,
+                                       BindingResult result, Model model) {
+        // If validation errors exist, return to home page
+        if (result.hasErrors()) {
             return "common/homePage";
-
-        if(userData.getUserType().equals("patient"))
-        {
-            Optional<PatientDto> existPatient = patientService.findPatientByEmailId(userData.getEmail());
-            if(existPatient.isPresent())
-            {
-                if(existPatient.get().getPassword().equals(userData.getPassword()))
-                    return "redirect:/hospital/patientPortal/" + existPatient.get().getId() ;
-//                    return "redirect:/patient/get/" + existPatient.get().getId() ;
-                else
-                    model.addAttribute("error","Incorrect password");
-            }
-            else {
-                model.addAttribute("error","Email ID "+userData.getEmail() +" does not exist");
-            }
         }
-        else if(userData.getUserType().equals("doctor"))
-        {
-            Optional<DoctorDto> existDoctor = doctorService.findDoctorByEmailId(userData.getEmail());
-            if(existDoctor.isPresent() )
-            {
-                if(existDoctor.get().getPassword().equals(userData.getPassword()))
-                    return "redirect:/hospital/doctorPortal/" + existDoctor.get().getId() ;
-                else
-                    model.addAttribute("error","Incorrect password");
+        // Handle login based on user type
+        if ("patient".equals(userData.getUserType())) {
+            return handlePatientLogin(userData, model);
+        } else if ("doctor".equals(userData.getUserType())) {
+            return handleDoctorLogin(userData, model);
+        } else {
+            model.addAttribute("error", "Invalid user type.");
+            return "common/homePage";
+        }
+    }
+
+    // Handle patient login
+    private String handlePatientLogin(UserLoginDTO userData, Model model) {
+        Optional<PatientDto> existPatient = patientService.findPatientByEmailId(userData.getEmail());
+
+        if (existPatient.isPresent()) {
+            if (existPatient.get().getPassword().equals(userData.getPassword())) {
+                return "redirect:/hospital/patientPortal/" + existPatient.get().getId();
+            } else {
+                model.addAttribute("error", "Incorrect password.");
             }
-            else{
-                model.addAttribute("error","Email ID "+userData.getEmail() +" does not exist");
-            }
+        } else {
+            model.addAttribute("error", "Email ID " + userData.getEmail() + " does not exist.");
         }
         return "common/homePage";
     }
 
+    // Handle doctor login
+    private String handleDoctorLogin(UserLoginDTO userData, Model model) {
+        Optional<DoctorDto> existDoctor = doctorService.findDoctorByEmailId(userData.getEmail());
 
+        if (existDoctor.isPresent()) {
+            if (existDoctor.get().getPassword().equals(userData.getPassword())) {
+                return "redirect:/hospital/doctorPortal/" + existDoctor.get().getId();
+            } else {
+                model.addAttribute("error", "Incorrect password.");
+            }
+        } else {
+            model.addAttribute("error", "Email ID " + userData.getEmail() + " does not exist.");
+        }
+        return "common/homePage";
+    }
 }

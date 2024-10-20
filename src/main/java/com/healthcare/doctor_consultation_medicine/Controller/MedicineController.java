@@ -1,110 +1,92 @@
 package com.healthcare.doctor_consultation_medicine.Controller;
 
 import com.healthcare.doctor_consultation_medicine.DTO.MedicineDto;
-import com.healthcare.doctor_consultation_medicine.Model.Medicine;
+import com.healthcare.doctor_consultation_medicine.Model.Appointment;
+import com.healthcare.doctor_consultation_medicine.Service.AppointmentService;
 import com.healthcare.doctor_consultation_medicine.Service.MedicineService;
-import jakarta.validation.Valid;
+import com.healthcare.doctor_consultation_medicine.Service.PatientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import java.time.format.DateTimeFormatter;
 
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MedicineController {
     private final MedicineService medicineService;
+    private final AppointmentService appointmentService;
+    private final PatientService patientService;
 
-
-    @GetMapping(value = {"/medicine/form/{mode}", "/medicine/form/{mode}/{id}"})
-    public String handlerMethodToShowForm(@PathVariable("mode") String mode,
-                                          @PathVariable(value = "id", required = false) Long id,
-                                          Model model) {
-        MedicineDto medicine = (id != null) ? medicineService.getSingleMedicineById(id) : new MedicineDto();
-        model.addAttribute("medicine", medicine);
-        model.addAttribute("mode", mode);
-        System.out.println("testing\n\n\n" + mode);
-
-        String formAction;
-        if (mode.equals("add")) {
-            formAction = "/medicine/add";
-        } else if (mode.equals("update")) {
-            formAction = "/medicine/update/" + medicine.getId();
-        } else
-            formAction = "#";
-
-        model.addAttribute("formAction", formAction);
-        return "medicine/showForm";
+    // Save medicine to the database
+    @PostMapping("/doctorPortal/{doctorId}/addMedicine/{patientId}/{appointmentId}")
+    public String addMedicine(@PathVariable("doctorId") Long doctorId,
+                              @PathVariable("patientId") Long patientId,
+                              @PathVariable("appointmentId") Long appointmentId,
+                              @ModelAttribute("medicine") MedicineDto medicine) {
+        medicineService.addMedicine(doctorId, patientId,medicine);
+        Appointment appointment = appointmentService.findById(appointmentId);
+        String timeStr = appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        return "redirect:/appointment/goToConsultationRoom?doctorId=" + doctorId + "&date="+appointment.getAppointmentDate()+"&time="+ timeStr;
     }
-
-    @PostMapping("/medicine/add")
-    public String handlerMethodToAddMedicine(@Valid @ModelAttribute("medicine") MedicineDto medicineDto, BindingResult result, Model model) {
-
-        model.addAttribute("mode", "add");
-
-        if (result.hasErrors())
-            return "medicine/showForm";
-        MedicineDto savedMedicine = medicineService.saveMedicine(medicineDto);
-        System.out.println("From PostMapping\n\n\n\n" + savedMedicine + "\n\n\n");
-        return "httpResponse";
-    }
-
-    @GetMapping("/medicine/list")
-    public String handlerMethodForListAllMedicine(Model model) {
-        List<MedicineDto> medicineList = medicineService.getAllMedicine();
-        if (!medicineList.isEmpty()) {
-            model.addAttribute("medicineList", medicineList);
-        } else
-            model.addAttribute("error", "No data found in database");
-
-        return "medicine/medicineList";
-    }
-
-    @PutMapping("/medicine/update/{id}")
-    public String handlerMethodToUpdateMedicine(@PathVariable("id") Long id, @Valid @ModelAttribute("medicine") MedicineDto medicineDto, BindingResult result, Model model) {
-
-        model.addAttribute("mode", "update");
-
-        if (result.hasErrors())
-            return "medicine/showForm";
-
-        MedicineDto savedMedicine = medicineService.saveMedicine(medicineDto);
-
-        System.out.println("From update or PUT Mapping\n\n\n\n" + savedMedicine + "\n\n\n");
-        return "httpResponse";
-    }
-
-    @DeleteMapping("/medicine/delete/{id}")
-    public String handlerMethodToDeleteDoctor(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("mode", "delete");
-
-        boolean isExist = medicineService.isExistById(id);
-        if (isExist) {
-            medicineService.deleteMedicineById(id);
+//For AJAX call in javascript
+    @GetMapping("medicine/get/{id}")
+    public ResponseEntity<MedicineDto> getMedicineById(@PathVariable Long id) {
+        MedicineDto medicine = medicineService.getSingleMedicineById(id);
+        if (medicine != null ) {
+            MedicineDto clonedMedicine = new MedicineDto(medicine.getId(),medicine.getName(),medicine.getDosage(),medicine.getDuration(),null,null);
+            return ResponseEntity.ok(clonedMedicine);
         } else {
-            model.addAttribute("error", "Patient ID " + id + " does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
-        return "httpResponse"; // Render the response page
     }
-
-//    @GetMapping("/medicine/get/{id}")
-//    public String handlerMethodToGetSingleDoctor(@PathVariable("id") Long id,Model model){
-//        model.addAttribute("mode", "view");
-//
-//        boolean isExist = medicineService.isExistById(id);
-//        if (isExist) {
-//            MedicineDto medicine =medicineService.getSingleMedicineById(id);
-//            model.addAttribute("medicine",medicine);
-//        }
-//        else{
-//            model.addAttribute("error", "Patient ID " + id + " does not exist");
-//            return "httpResponse";
-//        }
-//
-//        return "medicine/showForm";// Render the response page
-//    } Looks like not required as we gonna display all medicine in doctor end with all edit option
-//    patient side with only view options
+    @GetMapping("/hospital/patientPortal/{id}/medicines")
+    public String toShowMedicinesRequest(@PathVariable Long id , Model model){
+        model.addAttribute("mode","medicineView");
+        model.addAttribute("medicineView", "fragmentName");
+        model.addAttribute("patient",patientService.getSinglePatientById(id));
+        return "patient/patientPortal";
+    }
+    // Update the medicine in the database
+    @PostMapping("/doctorPortal/{doctorId}/updateMedicine/{appointmentId}")
+    public String updateMedicine(@PathVariable("doctorId") Long doctorId,
+                                 @PathVariable("appointmentId") Long appointmentId,
+                                 @ModelAttribute("medicine") MedicineDto updatedMedicine) {
+        medicineService.updateMedicine(Long.parseLong(updatedMedicine.getId()), updatedMedicine);
+        Appointment appointment = appointmentService.findById(appointmentId);
+        String timeStr = appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        return "redirect:/appointment/goToConsultationRoom?doctorId=" + doctorId + "&date="+appointment.getAppointmentDate()+"&time="+ timeStr;
+    }
+    // Delete medicine-> AJAX call from javascript
+    @GetMapping("/deleteMedicine/{medicineId}")
+    public ResponseEntity<String> deleteMedicineById(@PathVariable Long medicineId) {
+        if (medicineId != null ) {
+            medicineService.deleteMedicineById(medicineId);
+            return ResponseEntity.ok("deleted");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }
+// Display form to add medicine
+//    @GetMapping("/doctorPortal/{doctorId}/addMedicine/{patientId}")
+//    public String showAddMedicineForm(@PathVariable("doctorId") Long doctorId, @PathVariable("patientId") Long patientId, Model model) {
+//        model.addAttribute("medicine", new MedicineDto());
+//        model.addAttribute("doctor", doctorService.getSingleDoctorById(doctorId));
+//        model.addAttribute("patient", patientService.getSinglePatientById(patientId));
+//        return "doctor-medicine/addMedicine";
+//    }
+
+
+
+// Display form to update medicine
+//    @GetMapping("/doctorPortal/{doctorId}/updateMedicine/{medicineId}")
+//    public String showUpdateMedicineForm(@PathVariable Long doctorId, @PathVariable Long medicineId, Model model) {
+//        MedicineDto medicine = medicineService.getSingleMedicineById(medicineId);
+//        model.addAttribute("medicine", medicine);
+//        model.addAttribute("doctorId", doctorId);
+//        return "doctor-medicine/updateMedicine";
+//    }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="content">
+    <div class="border border-secondary mb-2 border-opacity-75 p-4">
+        <h5 class='text-start mb-2'>Patient Condition and Doctor Advice</h5>
+        <form id="doctorAdviceForm" method="post" th:action="@{/appointment/saveAdviceOnly}">
+            <div class="row">
+                <div class="col-md-8" >
+                    <textarea class="p-2" name="advice" th:text="${advice}"  rows="5" cols="90" aria-label="advice"></textarea>
+                    <input type="hidden" name="appointmentId" th:value="${appointmentId}"  aria-label="appointmentId"/>
+                </div>
+                <div class="col-md-1 d-flex" >
+                    <button class="btn btn-secondary"  style="margin-top:auto;" type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

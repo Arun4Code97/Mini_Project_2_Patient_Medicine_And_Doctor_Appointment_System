@@ -7,15 +7,11 @@ import java.util.Optional;
 
 
 public interface PatientService {
-    public PatientDto addPatient(PatientDto patientdto);
-        public void updatePatientById(Long id,PatientDto patientDto) ;
-        public void deletePatientById(Long id);
-        public List<PatientDto> getAllPatient();
-        public Optional<PatientDto> getPatientById(Long id);
-        public PatientDto getSinglePatientById(Long id);
-        public boolean existByEmailId(String email) ;
-
-    Optional<PatientDto> findPatientByEmailId(String email);
-
-    void setPassword(Long patientId, String confirmPassword);
-}
+    public boolean existByEmailId(String email) ;
+    public PatientDto addPatient(PatientDto patientdto) ;
+    public void setPassword(Long patientId, String confirmPassword);
+    public PatientDto getSinglePatientById(Long id);
+    public Optional<PatientDto> findPatientByEmailId(String email);
+    public void updatePatientById(Long id,PatientDto patientDto);
+    public void deletePatientById(Long id);
+    }

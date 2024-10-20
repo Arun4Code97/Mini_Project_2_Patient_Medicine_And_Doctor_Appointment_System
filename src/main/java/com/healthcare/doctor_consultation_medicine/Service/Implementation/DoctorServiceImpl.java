@@ -24,13 +24,20 @@ public class DoctorServiceImpl implements DoctorService {
     private final AppointmentRepository appointmentRepository;
     private final MedicineRepository medicineRepository;
     @Override
-    public DoctorDto saveDoctorWithImage(DoctorDto doctorDto, MultipartFile imageFile) throws IOException {
+    public DoctorDto saveDoctorWithImage(DoctorDto doctorDto) {
+
         Doctor doctor = DoctorMapper.mapToEntity(doctorDto);
 
-        if(imageFile != null && !imageFile.isEmpty()){
-            doctor.setImage(imageFile.getBytes());}
-
         return DoctorMapper.mapToDto(doctorRepository.save(doctor));
+    }
+
+    @Override
+    public void setPassword(Long doctorId, String confirmPassword) {
+        doctorRepository.findById(doctorId).ifPresent(
+                doctor -> {
+                    doctor.setPassword(confirmPassword);
+                    doctorRepository.save(doctor);
+                } );
     }
     @Override
     public boolean isExistByEmail(String email) {
@@ -49,23 +56,6 @@ public class DoctorServiceImpl implements DoctorService {
         Optional<Doctor> retrivedDoctor = doctorRepository.findById(id);
         return retrivedDoctor.map(DoctorMapper::mapToDto).orElse(null);
     }
-
-    @Override
-    public List<DoctorDto> getAllDoctors() {
-        List<Doctor> doctorList = doctorRepository.findAll();
-        return doctorList.stream().map(DoctorMapper::mapToDto).toList();
-    }
-
-//    @Override
-//    public DoctorDto updateDoctorById(Long id, DoctorDto doctorDto) {
-//        Doctor doctor = DoctorMapper.mapToEntity(doctorDto);
-//        return DoctorMapper.mapToDto(doctorRepository.save(doctor));
-//    }
-
-    @Override
-    public void deletePatientById(Long id) {
-        doctorRepository.deleteById(id);
-    }
     @Override
     public Optional<DoctorDto> findDoctorByEmailId(String email){
         Optional<Doctor> doctor = doctorRepository.findOneByEmail(email);
@@ -73,30 +63,16 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorDto> getDoctorsBySpecialization() {
-        return null;
-    }
-
-    @Override
-    public DoctorDto saveDoctor(DoctorDto doctorDto) {
-        Doctor doctor = DoctorMapper.mapToEntity(doctorDto);
-        return DoctorMapper.mapToDto(doctorRepository.save(doctor));
-    }
-
-    @Override
-    public void setPassword(Long doctorId, String confirmPassword) {
-        doctorRepository.findById(doctorId).ifPresent(
-                doctor -> {
-                    doctor.setPassword(confirmPassword);
-                    doctorRepository.save(doctor);
-                } );
+    public List<DoctorDto> getAllDoctors() {
+        List<Doctor> doctorList = doctorRepository.findAll();
+        return doctorList.stream().map(DoctorMapper::mapToDto).toList();
     }
 
     @Transactional
     public void deleteDoctorById(Long id){
         if(doctorRepository.existsById(id)){
-            appointmentRepository.deleteByPatientId(id);
-            medicineRepository.deleteByPatientId(id);
+            appointmentRepository.deleteByDoctorId(id);
+            medicineRepository.deleteByDoctorId(id);
             doctorRepository.deleteById(id);
         }
     }
