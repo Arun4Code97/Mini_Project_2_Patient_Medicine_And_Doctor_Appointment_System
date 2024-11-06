@@ -1,6 +1,5 @@
 package com.healthcare.doctor_consultation_medicine.service;
 
-import com.healthcare.doctor_consultation_medicine.DTO.DoctorDto;
 import com.healthcare.doctor_consultation_medicine.DTO.PatientDto;
 import com.healthcare.doctor_consultation_medicine.Mapper.PatientMapper;
 import com.healthcare.doctor_consultation_medicine.Model.Appointment;
@@ -76,8 +75,9 @@ public class AppointmentServiceTest {
     @DisplayName(value = "JUnit test for saveAppointment method")
     @Test
     public void testSaveAppointment(){
+
         // Act
-        appointmentService.addAppointment(appointment);
+        appointmentService.addAdviseToAppointment(appointment);
         // Assert
         verify(appointmentRepository, times(1)).save(appointment);
     }
@@ -92,9 +92,9 @@ public class AppointmentServiceTest {
         when(appointmentRepository.save(any(Appointment.class)))
                 .thenThrow(new DataIntegrityViolationException("appointment time should not be null"));
 
-        // Act & Assert - Expecting an exception or invalid addAppointment attempt
+        // Act & Assert - Expecting an exception or invalid addAdviseToAppointment attempt
         assertThrows(DataIntegrityViolationException.class, () -> {
-            appointmentService.addAppointment(invalidAppointment); // This should throw an exception
+            appointmentService.addAdviseToAppointment(invalidAppointment); // This should throw an exception
         });
     }
     @DisplayName("JUnit test for findById - positive case")

@@ -1,6 +1,8 @@
 package com.healthcare.doctor_consultation_medicine.Controller;
 
 import com.healthcare.doctor_consultation_medicine.DTO.DoctorDto;
+import com.healthcare.doctor_consultation_medicine.Exception.DoctorNotFoundException;
+import com.healthcare.doctor_consultation_medicine.Exception.PatientNotFoundException;
 import com.healthcare.doctor_consultation_medicine.Others.CredentialDto;
 import com.healthcare.doctor_consultation_medicine.Service.DoctorService;
 import jakarta.validation.Valid;
@@ -11,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.util.*;
 //    ---------------------For DoctorPortal---------------------------------
@@ -22,7 +26,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping("/addDoctor")
-    public String toHandleAddDoctorRequest(Model model) {
+    public String toHandleAddDoctorGetRequest(Model model) {
         DoctorDto doctor = new DoctorDto();
         model.addAttribute("doctor",doctor);
         model.addAttribute("mode","add");
@@ -30,13 +34,14 @@ public class DoctorController {
         return "doctor/addDoctor";
     }
     @PostMapping("/addDoctor")
-    public String toHandleAddDoctor(@Valid @ModelAttribute("doctor") DoctorDto doctor,
+    public String toHandleAddDoctorPostRequest(@Valid @ModelAttribute("doctor") DoctorDto doctor,
                                     BindingResult result,
                                     @RequestParam("imageFile") MultipartFile imageFile,
+                                    RedirectAttributes redirectAttributes,
                                     Model model) throws IOException {
 
+//        redirectAttributes.addFlashAttribute("mode","add");
         model.addAttribute("mode","add");
-
         if(result.hasErrors()){
             model.addAttribute("showDoctorForm","fragmentName");
             return "doctor/addDoctor";
@@ -53,13 +58,13 @@ public class DoctorController {
             }
 
         DoctorDto savedDoctor = doctorService.saveDoctorWithImage(doctor);
-        model.addAttribute("setPassword","fragmentName");
+        redirectAttributes.addFlashAttribute("setPassword","fragmentName");
 
         return "redirect:/hospital/addDoctor/setPassword?savedDoctorId=" + savedDoctor.getId();
     }
 
     @GetMapping("/addDoctor/setPassword")
-    public String toHandleSetPasswordRequest( @RequestParam("savedDoctorId") Long doctorId,
+    public String toHandleSetPasswordGetRequest( @RequestParam("savedDoctorId") Long doctorId,
                                               Model model){
         model.addAttribute("mode","add");
         model.addAttribute("credentials",new CredentialDto());
@@ -68,7 +73,7 @@ public class DoctorController {
         return "doctor/addDoctor";
     }
     @PostMapping("/addDoctor/setPassword")
-    public String toHandleSetPassword(   @Valid @ModelAttribute("credentials") CredentialDto credentials,
+    public String toHandleSetPasswordPostRequest(   @Valid @ModelAttribute("credentials") CredentialDto credentials,
                                          BindingResult result,
                                          @RequestParam("savedDoctorId") Long doctorId,
                                          Model model) throws IOException {
@@ -96,18 +101,24 @@ public class DoctorController {
     public String toHandleDoctorViewRequest(@PathVariable("id") Long doctorId,Model model){
 
         DoctorDto doctor = doctorService.getSingleDoctorById(doctorId);
+        if(doctor == null){
+            System.out.println("\n\n\nDoctor ID not found, throwing DoctorNotFoundException.\n\n\n");
+            throw new DoctorNotFoundException("Given Doctor Id : " + doctorId + " does not exist");
+        }
+
         model.addAttribute("doctor",doctor);
         model.addAttribute("mode","view");
         model.addAttribute("showDoctorForm","fragmentName");
-        if(doctor.getImage() != null) {
-            String base64Image = Base64.getEncoder().encodeToString(doctor.getImage());
-            model.addAttribute("doctorBase64Image",base64Image);
+        if (doctor.getImage() != null) {
+        String base64Image = Base64.getEncoder().encodeToString(doctor.getImage());
+        model.addAttribute("doctorBase64Image", base64Image);
         }
+
         return "doctor/doctorPortal";
     }
 
     @GetMapping("/doctorPortal/updateProfile/{id}")
-    public String toHandleUpdateProfileRequest(@PathVariable("id") Long doctorId, Model model) {
+    public String toHandleUpdateProfileGetRequest(@PathVariable("id") Long doctorId, Model model) {
         DoctorDto doctor = doctorService.getSingleDoctorById(doctorId);
         if(doctor != null){
             model.addAttribute("doctor",doctor);
@@ -119,17 +130,18 @@ public class DoctorController {
             }
         }
         else
-            model.addAttribute("error"," Doctor Id "+doctorId+" does not exist");
+            throw new DoctorNotFoundException("Given Doctor Id : " + doctorId + " does not exist");
         return "doctor/doctorPortal";
     }
     @PutMapping("/doctorPortal/updateProfile/{id}")
-    public String toHandleUpdateProfile(@PathVariable("id") Long id,
+    public String toHandleUpdateProfilePutRequest(@PathVariable("id") Long id,
                                         @Valid @ModelAttribute("doctor") DoctorDto doctorDto,
                                         BindingResult result,
                                         @RequestParam("imageFile") MultipartFile imageFile,
-                                        Model model) throws IOException{
+                                        Model model,
+                                        RedirectAttributes redirectAttributes) throws IOException{
 
-        if(result.hasErrors()){
+        if( result.hasErrors() ){
             model.addAttribute("mode","update");
             model.addAttribute("showDoctorForm", "fragmentName");
             return "doctor/doctorPortal";
@@ -137,21 +149,23 @@ public class DoctorController {
         if( !imageFile.isEmpty() ){
             doctorDto.setImage(imageFile.getBytes());
         }
-
-        doctorService.saveDoctorWithImage(doctorDto);
+        DoctorDto updatedDoctor = doctorService.saveDoctorWithImage(doctorDto);
+//        redirectAttributes.addFlashAttribute("success", true);
+        redirectAttributes.addFlashAttribute("updatedDoctor",updatedDoctor);
         return "redirect:/hospital/doctorPortal/"+ id;
     }
     @GetMapping("/doctorPortal/deleteDoctor/{id}")
-    public String toHandleDeleteDoctorRequest(@PathVariable("id") Long id,Model model){
+    public String toHandleDeleteDoctorGetRequest(@PathVariable("id") Long id,Model model){
         model.addAttribute("mode","delete");
         model.addAttribute("deleteDoctor", "fragmentName");
         if(doctorService.isExistById(id))
             model.addAttribute("doctor",doctorService.getSingleDoctorById(id));
-        else model.addAttribute("error"," Doctor Id "+id+" does not exist");
+        else
+            throw new DoctorNotFoundException("Doctor Id : " + id + " does not exist");
         return "doctor/doctorPortal";
     }
     @DeleteMapping("/doctorPortal/deleteDoctor/{id}")
-    public String toHandleDeleteDoctor(@PathVariable("id") Long id){
+    public String toHandleDeleteDoctorDeleteRequest(@PathVariable("id") Long id){
             doctorService.deleteDoctorById(id);
         return "redirect:/hospital";
     }

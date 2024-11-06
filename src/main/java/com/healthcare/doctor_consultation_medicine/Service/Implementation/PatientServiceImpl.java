@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +40,8 @@ public class PatientServiceImpl implements PatientService {
     }
     @Override
     public PatientDto getSinglePatientById(Long id){
-        return patientRepository.findById(id).map(PatientMapper::toMapPatientDto).orElse(new PatientDto());
+        return patientRepository.findById(id).map(PatientMapper::toMapPatientDto)
+                .orElse(new PatientDto());
     }
     @Override
     public Optional<PatientDto> findPatientByEmailId(String email){
@@ -49,12 +49,14 @@ public class PatientServiceImpl implements PatientService {
         return retrievedPatient.map(PatientMapper::toMapPatientDto);
     }
     @Override
-    public void updatePatientById(Long id,PatientDto patientDto) {
+    public PatientDto updatePatientById(Long id, PatientDto patientDto) {
         boolean isIdExist = patientRepository.existsById(id);
         if(isIdExist){
         Patient updatePatient = PatientMapper.toMapPatientEntity(patientDto);
-        patientRepository.save(updatePatient);
+        Patient savedPatient = patientRepository.save(updatePatient);
+        return PatientMapper.toMapPatientDto(savedPatient);
         }
+        else return null;
     }
     @Transactional
     @Override
@@ -62,6 +64,7 @@ public class PatientServiceImpl implements PatientService {
         if(patientRepository.existsById(id)){
             appointmentRepository.deleteByPatientId(id);
             medicineRepository.deleteByPatientId(id);
-            patientRepository.deleteById(id);}
+            patientRepository.deleteById(id);
+        }
     }
 }

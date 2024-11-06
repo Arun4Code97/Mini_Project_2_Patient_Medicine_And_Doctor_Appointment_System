@@ -78,7 +78,7 @@ public void setUp(){
                 .appointmentDate(LocalDate.now()).build();
 
 
-        // Act & Assert - Expecting an exception or invalid addAppointment attempt
+        // Act & Assert - Expecting an exception or invalid addAdviseToAppointment attempt
         assertThrows(DataIntegrityViolationException.class, () -> {
             appointmentRepository.save(invalidAppointment); // This should throw an exception
         });
@@ -189,7 +189,7 @@ public void setUp(){
 
     }
 }
-//  appointmentRepository.addAppointment(savedAppointment);
+//  appointmentRepository.addAdviseToAppointment(savedAppointment);
 //  appointmentRepository.findById(appointmentId);
 //  appointmentRepository.findByDoctorIdAndAppointmentDate(doctorId,appointmentDate);
 //  appointmentRepository.findByDoctorIdAndAppointmentDateAndAppointmentTime(doctorId,date,time);

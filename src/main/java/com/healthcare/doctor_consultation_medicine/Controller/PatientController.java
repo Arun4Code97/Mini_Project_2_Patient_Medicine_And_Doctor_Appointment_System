@@ -2,6 +2,7 @@ package com.healthcare.doctor_consultation_medicine.Controller;
 
 import com.healthcare.doctor_consultation_medicine.DTO.DoctorDto;
 import com.healthcare.doctor_consultation_medicine.DTO.PatientDto;
+import com.healthcare.doctor_consultation_medicine.Exception.PatientNotFoundException;
 import com.healthcare.doctor_consultation_medicine.Others.CredentialDto;
 import com.healthcare.doctor_consultation_medicine.Service.DoctorService;
 import com.healthcare.doctor_consultation_medicine.Service.PatientService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
@@ -45,7 +47,6 @@ public class PatientController {
             return "patient/addPatient";
         }
         PatientDto savedPatient = patientService.addPatient(patient);
-        model.addAttribute("setPassword","fragmentName");
         return "redirect:/hospital/addPatient/setPassword?savedPatientId=" + savedPatient.getId();
     }
 
@@ -70,19 +71,24 @@ public class PatientController {
             model.addAttribute("setPassword","fragmentName");
             return "patient/addPatient";
         }
+        // To check password fields are matching
         if( ! credentials.getPassword().equals( credentials.getConfirmPassword() ) ) {
             model.addAttribute("setPassword","fragmentName");
             model.addAttribute("error","Passwords are not matching");
             return "patient/addPatient";
         }
         patientService.setPassword(patientId, credentials.getConfirmPassword());
-        // For showing added notification and redirect to Doctor Home page
+        // For showing added notification and redirect to patient Home page
         model.addAttribute("success", true);
         return "patient/addPatient";
     }
     @GetMapping("/patientPortal/{id}")
     public String toHandlePatientViewProfileRequest(@PathVariable("id") Long patientId,Model model){
+
         PatientDto patient = patientService.getSinglePatientById(patientId);
+        if(patient.getId() == null)
+            throw new PatientNotFoundException("Given Patient Id : " + patientId + " does not exist");
+
         model.addAttribute("patient",patient);
         model.addAttribute("mode","view");
         model.addAttribute("showPatientForm","fragmentName");
@@ -92,6 +98,9 @@ public class PatientController {
     @GetMapping("/patientPortal/updateProfile/{id}")
     public String toHandleUpdateProfileRequest(@PathVariable("id") Long patientId, Model model) {
         PatientDto patient = patientService.getSinglePatientById(patientId);
+        if(patient.getId() == null)
+            throw new PatientNotFoundException("Given Patient Id : " + patientId + " does not exist");
+
         model.addAttribute("patient", patient);
         model.addAttribute("mode", "update");
         model.addAttribute("showPatientForm", "fragmentName"); // Switch to update fragment
@@ -101,14 +110,19 @@ public class PatientController {
     @PutMapping("/patientPortal/updateProfile/{id}")
     public String toHandleUpdateProfile(@PathVariable("id") Long id,
                                         @Valid @ModelAttribute("patient") PatientDto patientDto,
-                                        BindingResult result,Model model){
+                                        BindingResult result,Model model,
+                                        RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
             model.addAttribute("mode","update");
             model.addAttribute("showPatientForm", "fragmentName");
             return "patient/patientPortal";
         }
-        patientService.updatePatientById(id,patientDto);
-        model.addAttribute("mode","view");
+        PatientDto updatedPatientDto = patientService.updatePatientById(id,patientDto);
+        if (updatedPatientDto != null) {
+            redirectAttributes.addFlashAttribute("updatedPatient", updatedPatientDto);
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Patient not found with ID: " + id);
+        }
         return "redirect:/hospital/patientPortal/"+ id;
     }
 
@@ -116,7 +130,10 @@ public class PatientController {
     public String toHandleDeletePatientRequest(@PathVariable("id") Long id,Model model){
         model.addAttribute("mode","delete");
         model.addAttribute("deletePatient", "fragmentName");
-        model.addAttribute("patient",patientService.getSinglePatientById(id));
+        PatientDto patient = patientService.getSinglePatientById(id);
+        if(patient.getId() == null)
+            throw new PatientNotFoundException("Given Patient Id : " + id + " does not exist");
+        model.addAttribute("patient",patient);
         return "patient/patientPortal";
     }
 
@@ -144,11 +161,14 @@ public class PatientController {
             }
             doctorListWithConvertedImage.add(doctorData);
         }
+        PatientDto patient = patientService.getSinglePatientById(id);
+        if(patient.getId() == null)
+            throw new PatientNotFoundException("Given Patient Id : " + id + " does not exist");
 
         model.addAttribute("doctorsData",doctorListWithConvertedImage);
         model.addAttribute("mode","showDoctorsBySpecialization");
         model.addAttribute("showDoctors", "fragmentName");
-        model.addAttribute("patient",patientService.getSinglePatientById(id));
+        model.addAttribute("patient",patient );
         return "patient/patientPortal";
     }
 

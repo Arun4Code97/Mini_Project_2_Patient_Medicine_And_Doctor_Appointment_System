@@ -140,7 +140,7 @@ public class MedicineServiceTest {
     public void testAddMedicine_dataBaseException() {
         try (MockedStatic<MedicineMapper> mapperMockedStatic = mockStatic(MedicineMapper.class)) {
             //Arrange
-            // To addAppointment an invalid medicine (null name, null duration and null dosage email)
+            // To addAdviseToAppointment an invalid medicine (null name, null duration and null dosage email)
 
             MedicineDto invalidMedicineDto = MedicineDto.builder()
                     .id(null)
@@ -159,7 +159,7 @@ public class MedicineServiceTest {
             when(patientRepository.findById(1L)).thenReturn(Optional.of(patient));
             mapperMockedStatic.when(() -> MedicineMapper.toMapEntity(any(MedicineDto.class)))
                     .thenReturn(invalidMedicine);
-            // Simulate repository throwing an exception when trying to addAppointment invalid Medicine
+            // Simulate repository throwing an exception when trying to addAdviseToAppointment invalid Medicine
             when(medicineRepository.save(any(Medicine.class)))
                     .thenThrow(new DataIntegrityViolationException("Null constraint violation"));
             mapperMockedStatic.when(() -> MedicineMapper.toMapDto(any(Medicine.class)))
@@ -314,6 +314,7 @@ public class MedicineServiceTest {
                 .build();
         when(medicineRepository.findById(5L)).thenReturn(Optional.of(medicine));
         when(medicineRepository.save(any(Medicine.class))).thenReturn(medicine);
+
         // Act
         medicineService.updateMedicine(5L,updatedMedicineDto);
 

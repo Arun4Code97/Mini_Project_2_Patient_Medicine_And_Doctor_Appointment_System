@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface AppointmentService {
     List<Appointment> collectBookedSlots(Long doctorId, LocalDate date);
-    public Appointment bookAppointment(Long doctorId, Long patientId, LocalDate appointmentDate, LocalTime appointmentTime);
+    Appointment bookAppointment(Long doctorId, Long patientId, LocalDate appointmentDate, LocalTime appointmentTime);
 
     PatientDto fetchPatientRecord(Long doctorId, LocalDate date, LocalTime time);
 
     Appointment findById(Long appointmentId);
 
-    void addAppointment(Appointment appointment);
+    Appointment addAdviseToAppointment(Appointment appointment); // for saving doctor advise
 
     Appointment fetchAppointment(Long doctorId, LocalDate date, LocalTime time);
 }

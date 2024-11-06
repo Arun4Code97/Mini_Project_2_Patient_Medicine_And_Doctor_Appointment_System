@@ -142,7 +142,7 @@ public class DoctorServiceTest {
         doctorService.setPassword(5L, "newPassword"); // Reset with newPassword
 
         // Assert
-        assertThat(doctor.getPassword()).isNotNull(); // After successful addAppointment, password field is set as newPassword
+        assertThat(doctor.getPassword()).isNotNull(); // After successful addAdviseToAppointment, password field is set as newPassword
         // Verify
         verify(doctorRepository, times(1)).save(any(Doctor.class));
     }

@@ -83,7 +83,7 @@ public class MedicineRepositoryTest {
         invalidMedicine.setName("Paracetamol");
         // name and duration is missing, which may cause an exception as It should be available and unique
 
-        // Act & Assert - Expecting an exception or invalid addAppointment attempt
+        // Act & Assert - Expecting an exception or invalid addAdviseToAppointment attempt
         assertThrows(DataIntegrityViolationException.class, () -> {
             medicineRepository.save(invalidMedicine); // This should throw an exception
         });
@@ -91,10 +91,10 @@ public class MedicineRepositoryTest {
     @DisplayName(value = "JUnit test for saveNewMedicine with duplicate firstMedicine name (Negative case)")
     @Test
     public void testSaveMedicine_DuplicateMedicine() {
-        // Arrange - Create and addAppointment the first firstMedicine
+        // Arrange - Create and addAdviseToAppointment the first firstMedicine
         medicineRepository.save(firstMedicine);
 
-        // Act & Assert - Try to addAppointment another firstMedicine with the same email
+        // Act & Assert - Try to addAdviseToAppointment another firstMedicine with the same email
         Medicine duplicateMedicine = new Medicine();
         duplicateMedicine.setName("Paracetamol");
         duplicateMedicine.setDosage("10 ml");
@@ -222,6 +222,6 @@ public class MedicineRepositoryTest {
 }
 //medicineRepository.findById(doctorId)
 //medicineRepository.findAllByPatientId(patientId);
-//medicineRepository.addAppointment
+//medicineRepository.addAdviseToAppointment
 //medicineRepository.deleteById(id)
 //medicineRepository.deleteByPatientId(id)

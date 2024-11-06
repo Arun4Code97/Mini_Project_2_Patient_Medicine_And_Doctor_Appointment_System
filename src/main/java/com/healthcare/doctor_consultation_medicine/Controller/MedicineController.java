@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.time.format.DateTimeFormatter;
 
 
@@ -27,17 +29,17 @@ public class MedicineController {
                               @PathVariable("patientId") Long patientId,
                               @PathVariable("appointmentId") Long appointmentId,
                               @ModelAttribute("medicine") MedicineDto medicine) {
-        medicineService.addMedicine(doctorId, patientId,medicine);
+        MedicineDto savedMedicine = medicineService.addMedicine(doctorId, patientId,medicine);
         Appointment appointment = appointmentService.findById(appointmentId);
         String timeStr = appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         return "redirect:/appointment/goToConsultationRoom?doctorId=" + doctorId + "&date="+appointment.getAppointmentDate()+"&time="+ timeStr;
     }
-//For AJAX call in javascript
-    @GetMapping("medicine/get/{id}")
+    @GetMapping("medicine/get/{id}") //For AJAX call in javascript
     public ResponseEntity<MedicineDto> getMedicineById(@PathVariable Long id) {
         MedicineDto medicine = medicineService.getSingleMedicineById(id);
         if (medicine != null ) {
-            MedicineDto clonedMedicine = new MedicineDto(medicine.getId(),medicine.getName(),medicine.getDosage(),medicine.getDuration(),null,null);
+            MedicineDto clonedMedicine = new MedicineDto(
+                    medicine.getId(),medicine.getName(),medicine.getDosage(),medicine.getDuration(),null,null);
             return ResponseEntity.ok(clonedMedicine);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -55,13 +57,18 @@ public class MedicineController {
     public String updateMedicine(@PathVariable("doctorId") Long doctorId,
                                  @PathVariable("appointmentId") Long appointmentId,
                                  @ModelAttribute("medicine") MedicineDto updatedMedicine) {
-        medicineService.updateMedicine(Long.parseLong(updatedMedicine.getId()), updatedMedicine);
+        MedicineDto updatedMedicineDto = medicineService.updateMedicine(
+                Long.parseLong(updatedMedicine.getId()), updatedMedicine);
+
         Appointment appointment = appointmentService.findById(appointmentId);
+        if (appointment == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found");
+        }
         String timeStr = appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        return "redirect:/appointment/goToConsultationRoom?doctorId=" + doctorId + "&date="+appointment.getAppointmentDate()+"&time="+ timeStr;
+        return "redirect:/appointment/goToConsultationRoom?doctorId=" + doctorId + "&date="
+            + appointment.getAppointmentDate() + "&time=" + timeStr;
     }
-    // Delete medicine-> AJAX call from javascript
-    @GetMapping("/deleteMedicine/{medicineId}")
+    @GetMapping("/deleteMedicine/{medicineId}")     // Delete medicine-> AJAX call from javascript
     public ResponseEntity<String> deleteMedicineById(@PathVariable Long medicineId) {
         if (medicineId != null ) {
             medicineService.deleteMedicineById(medicineId);

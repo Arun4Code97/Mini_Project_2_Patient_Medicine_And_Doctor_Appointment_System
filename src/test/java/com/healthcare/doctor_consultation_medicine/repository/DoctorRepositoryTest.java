@@ -66,7 +66,7 @@ public class DoctorRepositoryTest {
         invalidDoctor.setLastName("Doe");
         // Email is missing, which may cause an exception as It should be Unique and available
 
-        // Act & Assert - Expecting an exception or invalid addAppointment attempt
+        // Act & Assert - Expecting an exception or invalid addAdviseToAppointment attempt
         assertThrows(DataIntegrityViolationException.class, () -> {
             doctorRepository.save(invalidDoctor); // This should throw an exception
         });
@@ -75,14 +75,14 @@ public class DoctorRepositoryTest {
     @DisplayName(value = "JUnit test for saveNewDoctor with duplicate email (Negative case)")
     @Test
     public void testSaveDoctor_DuplicateEmail() {
-        // Arrange - Create and addAppointment the first doctor
+        // Arrange - Create and addAdviseToAppointment the first doctor
         Doctor firstDoctor = new Doctor();
         firstDoctor.setFirstName("Abdul");
         firstDoctor.setLastName("Kalam");
         firstDoctor.setEmail("apj@gmail.com");
         doctorRepository.save(firstDoctor);
 
-        // Act & Assert - Try to addAppointment another doctor with the same email
+        // Act & Assert - Try to addAdviseToAppointment another doctor with the same email
         Doctor duplicateDoctor = new Doctor();
         duplicateDoctor.setFirstName("Ajith");
         duplicateDoctor.setLastName("Kumar");

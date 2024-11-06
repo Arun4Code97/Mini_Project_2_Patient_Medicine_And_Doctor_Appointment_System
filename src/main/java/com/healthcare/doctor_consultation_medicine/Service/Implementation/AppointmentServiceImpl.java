@@ -24,8 +24,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     @Override
-    public void addAppointment(Appointment appointment) {
-        appointmentRepository.save(appointment);
+    public Appointment addAdviseToAppointment(Appointment appointment) {
+        return appointmentRepository.save(appointment);
     }
     @Override
     public Appointment findById(Long appointmentId) {

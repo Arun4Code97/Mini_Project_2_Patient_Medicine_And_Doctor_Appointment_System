@@ -43,7 +43,7 @@ public class MedicineServiceImpl implements MedicineService {
         return medicineList.stream().map(MedicineMapper::toMapDto).collect(Collectors.toList());
     }
     @Override
-    public void updateMedicine(Long medicineId, MedicineDto updatedMedicine) {
+    public MedicineDto updateMedicine(Long medicineId, MedicineDto updatedMedicine) {
         Medicine medicine = medicineRepository.findById(medicineId)
                 .orElseThrow(() -> new NoSuchElementException("Medicine with id " + medicineId + " not found"));
         // Update medicine details
@@ -51,7 +51,7 @@ public class MedicineServiceImpl implements MedicineService {
         medicine.setName(updatedMedicine.getName());
         medicine.setDosage(updatedMedicine.getDosage());
         medicine.setDuration(updatedMedicine.getDuration());
-        medicineRepository.save(medicine);
+        return MedicineMapper.toMapDto(medicineRepository.save(medicine));
     }
     @Override
     public void deleteMedicineById(Long id) {

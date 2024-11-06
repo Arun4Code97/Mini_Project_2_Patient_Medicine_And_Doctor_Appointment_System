@@ -136,7 +136,7 @@ public class PatientServiceTest {
     public void testAddPatient_dataBaseException() {
         try (MockedStatic<PatientMapper> mapperMockedStatic = mockStatic(PatientMapper.class)) {
             //Arrange
-            // Now try to addAppointment an invalid patient (null firstName, null lastName and duplicate email)
+            // Now try to addAdviseToAppointment an invalid patient (null firstName, null lastName and duplicate email)
             Patient invalidPatient = Patient.builder()
                     .firstName(null)
                     .lastName(null)
@@ -150,7 +150,7 @@ public class PatientServiceTest {
 
             mapperMockedStatic.when(() -> PatientMapper.toMapPatientEntity(invalidPatientDto))
                     .thenReturn(invalidPatient);
-            // Simulate repository throwing an exception when trying to addAppointment invalid patient
+            // Simulate repository throwing an exception when trying to addAdviseToAppointment invalid patient
             when(patientRepository.save(invalidPatient))
                     .thenThrow(new DataIntegrityViolationException("Null and Unique constraint violation"));
             mapperMockedStatic.when(() -> PatientMapper.toMapPatientDto(invalidPatient))
@@ -162,7 +162,7 @@ public class PatientServiceTest {
                            invalidPatientDto);
             });
 
-            // Verify addAppointment was attempted
+            // Verify addAdviseToAppointment was attempted
             mapperMockedStatic.verify(() -> PatientMapper.toMapPatientEntity(any(PatientDto.class))
                     ,times(1));
             verify(patientRepository, times(1)).save(any(Patient.class));
@@ -276,7 +276,7 @@ public class PatientServiceTest {
 
         patientService.updatePatientById(5L,patientDto);
 
-        // Assert: Verify the addAppointment and mapper calls
+        // Assert: Verify the addAdviseToAppointment and mapper calls
         verify(patientRepository, times(1)).existsById(5L);
         verify(patientRepository, times(1)).save(patient);
         mapperMockedStatic.verify(() -> PatientMapper.toMapPatientEntity(patientDto), times(1));
@@ -293,7 +293,7 @@ public class PatientServiceTest {
         // Act
         patientService.updatePatientById(200L, patientDto);
 
-        // Assert: Verify that addAppointment was NOT called and PatientMapper was not invoked
+        // Assert: Verify that addAdviseToAppointment was NOT called and PatientMapper was not invoked
         verify(patientRepository, times(1)).existsById(200L);
         try (MockedStatic<PatientMapper> mapperMockedStatic = mockStatic(PatientMapper.class)) {
             mapperMockedStatic.verify(() -> PatientMapper.toMapPatientEntity(any(PatientDto.class)), never());

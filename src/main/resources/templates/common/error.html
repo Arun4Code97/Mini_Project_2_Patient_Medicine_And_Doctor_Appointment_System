@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="www.thyemleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error Response Page</title>
+    <link rel="icon" type="image/x-icon" href="/logo.png">
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h2 class="mt-5 ml-2 mb-2" >Error Response</h2><br>
+    <p><strong class=" ml-2" th:if="${error} != null">Status Code : </strong> <span th:text=" ${error.status}">Unknown Error</span></p>
+    <p><strong class=" ml-2" >Error Message : </strong> <span th:text=" ${error.message}">Something went wrong </span> </p>
+    <p><strong class=" ml-2">Time Stamp : </strong> <span th:text=" ${error.timestamp}">Unknown Error</span></p>
+
+    <!-- Instead of returning default whiteLabel Error Page.
+Returning minimal error details in friendly manner in customer end -->
+    <p class="ml-2">For <strong>Html</strong> response from <strong>MVC Controller</strong>> </p>
+    <p class="ml-2">Click <a th:href="@{/hospital }">here</a> for logging into the hospital</p>
+
+</div>
+</body>
+</html>

@@ -129,7 +129,7 @@ public class PatientRepositoryTest {
         invalidPatient.setLastName("Kalam");
         // invalidPatient.setEmail("apj@gmail.com"); Email is missing, which may cause an exception as It should be Unique and available
 
-        // Act & Assert - Expecting an exception or invalid addAppointment attempt
+        // Act & Assert - Expecting an exception or invalid addAdviseToAppointment attempt
         assertThrows(DataIntegrityViolationException.class, () -> {
             patientRepository.save(invalidPatient); // This should throw an exception
         });
@@ -138,14 +138,14 @@ public class PatientRepositoryTest {
     @DisplayName(value = "JUnit test for saveNewPatient with duplicate email (Negative case)")
     @Test
     public void testSavePatient_DuplicateEmail() {
-        // Arrange - Create and addAppointment the first patient
+        // Arrange - Create and addAdviseToAppointment the first patient
         Patient firstPatient = new Patient();
         firstPatient.setFirstName("Abdul");
         firstPatient.setLastName("Kalam");
         firstPatient.setEmail("apj@gmail.com");
         patientRepository.save(firstPatient);
 
-        // Act & Assert - Try to addAppointment another Patient
+        // Act & Assert - Try to addAdviseToAppointment another Patient
         // with the same email
         Patient duplicatePatient = new Patient();
         duplicatePatient.setFirstName("Ajith");
@@ -206,7 +206,7 @@ public class PatientRepositoryTest {
 //These below methods are used in patient repository layer to fetch required data from database
 //patientRepository.findById(id)
 //patientRepository.findOneByEmail(email);
-//patientRepository.addAppointment(newPatient);
+//patientRepository.addAdviseToAppointment(newPatient);
 //patientRepository.existsById(id);
 //patientRepository.deleteById(id);
 

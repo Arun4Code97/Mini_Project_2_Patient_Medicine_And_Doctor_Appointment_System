@@ -35,7 +35,7 @@ public class MedicineDto {
     @Override
     public String toString(){
         return "MedicineDto{ " +
-                ",Id = " + id +
+                "Id = " + id +
                 ", Name = " + name +
                 ", Dosage = " + dosage +
                 ", Duration = " + duration + "}";
