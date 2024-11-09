@@ -6,24 +6,24 @@ The system facilitates essential services such as patient and doctor registratio
 **Key Features: -**
 <br>
 **1.	Hospital Home Page**<br>
-         &nbsp;&nbsp;A new Patient registration<br>
-         &nbsp;&nbsp;A new Doctor Registration<br>
-         &nbsp;&nbsp;Access to doctor/patient portal<br>
+         &nbsp;&nbsp; &nbsp;&nbsp;A new Patient registration<br>
+         &nbsp;&nbsp; &nbsp;&nbsp;A new Doctor Registration<br>
+         &nbsp;&nbsp; &nbsp;&nbsp;Access to doctor/patient portal<br>
          <br>
-**2.	Patient Portal**
-Patient Portal has the following functionalities
-         To Book Appointments (Should be able to see all available doctors in hospital, can book appointment as per slots available)
-         To show prescribed medicines list (All medicines prescribed by other doctors in the same hospital would be listed)
-         Update profile
-         Delete profile
-         Logout
+**2.	Patient Portal**<br>
+  &nbsp;&nbsp;Patient Portal has the following functionalities<br>
+           &nbsp;&nbsp; &nbsp;&nbsp;To Book Appointments (Should be able to see all available doctors in hospital, can book appointment as per slots available)<br>
+           &nbsp;&nbsp; &nbsp;&nbsp;To show prescribed medicines list (All medicines prescribed by other doctors in the same hospital would be listed)<br>
+           &nbsp;&nbsp; &nbsp;&nbsp;Update profile<br>
+           &nbsp;&nbsp; &nbsp;&nbsp;Delete profile<br>
+           &nbsp;&nbsp; &nbsp;&nbsp;Logout<br>
          <br>
-**3.	Doctor Portal**
-Doctor Portal has the following functionalities
-         Show Booked Appointments (Should be able to view patient details, add advice and add new medicine or alter previous medicines)
-         Update profile
-         Delete profile
-         Logout
-         <br>
-   By providing these services in a single platform, helps hospitals and clinics efficiently manage appointments and patient information, reduces administrative workload, and allows for a more seamless experience for both doctors and patients.
+**3.	Doctor Portal**<br>
+  &nbsp;&nbsp;Doctor Portal has the following functionalities<br>
+            &nbsp;&nbsp; &nbsp;&nbsp;Show Booked Appointments (Should be able to view patient details, add advice and add new medicine or alter previous medicines)<br>
+            &nbsp;&nbsp; &nbsp;&nbsp;Update profile<br>
+            &nbsp;&nbsp; &nbsp;&nbsp;Delete profile<br>
+            &nbsp;&nbsp; &nbsp;&nbsp;Logout<br>
+         <br><br><br>
+&nbsp;&nbsp;By providing these services in a single platform, helps hospitals and clinics efficiently manage appointments and patient information, reduces administrative workload, and allows for a more seamless experience for both doctors and patients.
    <br>
