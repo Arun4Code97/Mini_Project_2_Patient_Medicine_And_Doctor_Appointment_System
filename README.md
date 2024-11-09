@@ -5,10 +5,10 @@ The system facilitates essential services such as patient and doctor registratio
 <br>
 **Key Features: -**
 <br>
-**1.	Hospital Home Page**
-      	A new Patient registration
-         A new Doctor Registration
-         Access to doctor/patient portal
+**1.	Hospital Home Page**<br>
+         A new Patient registration<br>
+         A new Doctor Registration<br>
+         Access to doctor/patient portal<br>
          <br>
 **2.	Patient Portal**
 Patient Portal has the following functionalities
