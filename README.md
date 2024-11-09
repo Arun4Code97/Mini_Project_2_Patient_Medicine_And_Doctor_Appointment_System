@@ -25,7 +25,7 @@ The system facilitates essential services such as patient and doctor registratio
             &nbsp;&nbsp; &nbsp;&nbsp;* Delete profile<br>
             &nbsp;&nbsp; &nbsp;&nbsp;* Logout<br>
          <br>
-&nbsp;&nbsp;By providing these services in a single platform, helps hospitals and clinics efficiently manage appointments and patient information, reduces administrative workload, and allows for a more seamless experience for both doctors and patients.
+&nbsp;&nbsp;By providing these services in a single platform, helps hospitals and clinics efficiently manage appointments and patient information, reduces administrative workload, and allows for a more seamless experience for both doctors and patients.         <br>
 &nbsp;&nbsp;Kindly refer the abovee attahced documentation for setting up my project into local machine.<br>
 &nbsp;&nbsp;Also refer the attahced output video recordings of my application.<br>
    <br>
