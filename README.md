@@ -2,7 +2,7 @@
 <br>
 &nbsp;&nbsp;&nbsp;Patient Medicine and Appointment System is a web-based healthcare application designed to streamline the interaction between patients and doctors within a hospital. 
 The system facilitates essential services such as patient and doctor registration, appointment scheduling, medicine prescriptions, and user profile management.
-<br>
+<br><br>
 **Key Features: -**
 <br>
 **1.	Hospital Home Page**<br>
@@ -24,6 +24,6 @@ The system facilitates essential services such as patient and doctor registratio
             &nbsp;&nbsp; &nbsp;&nbsp;Update profile<br>
             &nbsp;&nbsp; &nbsp;&nbsp;Delete profile<br>
             &nbsp;&nbsp; &nbsp;&nbsp;Logout<br>
-         <br><br><br>
+         <br><br>
 &nbsp;&nbsp;By providing these services in a single platform, helps hospitals and clinics efficiently manage appointments and patient information, reduces administrative workload, and allows for a more seamless experience for both doctors and patients.
    <br>
