@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping(value = {"/", "/hospital"})
 @RequiredArgsConstructor
 public class HomeController {
     private final PatientService patientService;
