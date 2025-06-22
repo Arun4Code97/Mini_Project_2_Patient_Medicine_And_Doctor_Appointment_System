@@ -14,18 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-/** This is the Home controller and Landing page for healthcare system
- * This handler class will accept HTTP request, Maps it to appropriate handler methods
- * The Corresponding handler method process the request and returns view as response
- */
-
 @Controller
 @RequestMapping(value = {"/", "/hospital"})
 @RequiredArgsConstructor
 public class HomeController {
     private final PatientService patientService;
     private final DoctorService doctorService;
-
     @GetMapping
     public String toHandleHomePageRequest(Model model){
         UserLoginDTO userData = new UserLoginDTO();
